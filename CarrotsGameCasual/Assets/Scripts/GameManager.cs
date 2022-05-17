@@ -5,66 +5,132 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    enum StateGame
+    public enum StateGame
     {
         GameOver, GamePlay, GameWait
     }
+    [SerializeField] private GamePlay gamePlayUI;
+    [SerializeField] private GameOver gameOverUI;
+    [SerializeField] private GameWait gameWaitUI;
     [SerializeField] private Transform[] posSpawnAnswer_Item;
+    [SerializeField] private LevelScptObj levelScptObj;
     [SerializeField] private int lowerLimit, highestLimit;
+    [SerializeField] private float speedInGame;
+    [SerializeField] private float increaseSlowly;
+    [SerializeField] private int scoreAchieve;
+    [SerializeField] private int totalCarrotPoint;
 
     public Text txtQuestion;
     public Text txtRightAnswer;
 
-    List<int> listParams;
-    List<int> paramAfter, opeAfter;
-    List<int> paramFull, operationFull;
-    List<Group> groups;
+    private List<int> listParams;
+    private List<int> paramAfter, opeAfter;
+    private List<int> paramFull, operationFull;
+    private List<Group> groups;
     int firstParameter, secondParameter;
     int indexGroup;
-    private readonly float time = 5f;
-    private float curTime;
-    private SpawnManager instanceSM;
+    private int curTurnInGame;
     private int rightAnswer;
+    private int curIndexLvScptObj;
+    private int turnItem;
+
+    private int curScore;
+    private int curCarrotPoint;
+    private float curSpeed;
+
+    private SpawnManager instanceSM;
+    /// <summary>
+    /// Singleton
+    /// </summary>
+    public static GameManager instance;
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+
         listParams = new List<int>();
         paramAfter = new List<int>();
         opeAfter = new List<int>();
         paramFull = new List<int>();
         operationFull = new List<int>();
         groups = new List<Group>();
+        curTurnInGame = 0;
+        curIndexLvScptObj = 0;
+        turnItem = 0;
+        curScore = 0;
+        curCarrotPoint = 0;
     }
     // Start is called before the first frame update
     void Start()
     {
-        curTime = time;
         instanceSM = SpawnManager.instance;
-        //HandleQuestion(3);
+        curSpeed = speedInGame;
+        RandomTurnItem();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //curTime -= Time.deltaTime;
-        //if (curTime <= 0)
-        //{
-        //    HandleQuestion();
-        //    NextTurn();
-        //    curTime = time;
-        //}
+        curSpeed += increaseSlowly;
     }
+    #region Turn
     public void NextTurn()
     {
+        curTurnInGame++;
+        //Initial Item
+        if (curTurnInGame == turnItem)
+        {
+            //spawn item
+            RandomTurnItem();
+            return;
+        }
 
         //Initial Question
+        for (int i = levelScptObj.turns.Count - 1; i >= 0; i--)
+        {
+            //Increase Speed
+            if (curTurnInGame == levelScptObj.turns[i].turn)
+                curSpeed += levelScptObj.turns[i].speedUp;
 
+            if (curTurnInGame >= levelScptObj.turns[i].turn)
+            {
+                curIndexLvScptObj = i;
+                HandleQuestion(levelScptObj.turns[i].numberOfOpeSptObj, levelScptObj.turns[i].GetOperations());
+                break;
+            }
+        }
         //Initial Answer
+        int indexRight = RandomNumber(1, posSpawnAnswer_Item.Length);
+        List<int> wrongNumbers = new List<int>();
+        int wrongNumber;
+        for (int i = 0; i < posSpawnAnswer_Item.Length; i++)
+        {
+            if (i != indexRight)
+            {
+                do
+                {
+                    wrongNumber = RandomNumber(lowerLimit, highestLimit);
+                } while (wrongNumber == rightAnswer || wrongNumbers.Contains(wrongNumber));
+                wrongNumbers.Add(wrongNumber);
+                //spawn answer wrong
+            }
+            else
+            {
+                //spawn answer right
 
-        //Initial Item
+            }
+        }
+
+
+
     }
-    private void HandleQuestion(int numberOfOperation,int from,int to)
+    private void RandomTurnItem()
     {
-        listParams.Clear(); 
+        turnItem += RandomNumber(levelScptObj.turns[curIndexLvScptObj].turnItemRangeFrom, levelScptObj.turns[curIndexLvScptObj].turnItemRangeTo);
+    }
+    private void HandleQuestion(int numberOfOperation, int[] operations)
+    {
+        listParams.Clear();
         paramAfter.Clear();
         opeAfter.Clear();
         paramFull.Clear();
@@ -74,7 +140,7 @@ public class GameManager : MonoBehaviour
         //for numberOfOperation tìm nhân chia để gộp hoặc tách
         for (int i = 0; i < numberOfOperation; i++)
         {
-            int operation = RandomNumber(from, to);
+            int operation = FindOperation(operations);
             operationFull.Add(operation);
             //tìm giá trị chung x or / để gộp
             if (i > 0)
@@ -117,7 +183,7 @@ public class GameManager : MonoBehaviour
             }
         }
         // đây là trường hợp mà trong 4 phép tính được random ban đầu không có + - chỉ có nhân chia 
-        if(opeAfter.Count == 0)
+        if (opeAfter.Count == 0)
         {
             paramAfter.Add(RandomNumber(lowerLimit, highestLimit));
         }
@@ -125,8 +191,8 @@ public class GameManager : MonoBehaviour
         {
             paramAfter = HandleLogicOperation(opeAfter, lowerLimit, highestLimit);
         }
-        
-            bool y_n = false;
+
+        bool y_n = false;
         for (int i = 0; i < paramAfter.Count; i++)
         {
             for (int j = 0; j < groups.Count; j++)
@@ -147,13 +213,13 @@ public class GameManager : MonoBehaviour
         }
         for (int i = 0; i < paramFull.Count; i++)
         {
-            if(i == paramFull.Count - 1)
+            if (i == paramFull.Count - 1)
             {
-                ShowQuestionText(paramFull[i], 0);
+                ShowQuestionTextGamePlay(paramFull[i], 0);
             }
             else
             {
-                ShowQuestionText(paramFull[i], operationFull[i]);
+                ShowQuestionTextGamePlay(paramFull[i], operationFull[i]);
             }
         }
         //xử lý lấy rightansnwer
@@ -171,38 +237,10 @@ public class GameManager : MonoBehaviour
         ShowRightAnswerText(rightAnswer);
 
     }
-    private int FindOperation(List<int> _operation)
+    private int FindOperation(int[] _operation)
     {
-        int index = RandomNumber(1, _operation.Count);
+        int index = RandomNumber(1, _operation.Length);
         return _operation[index];
-    }
-    private void ShowQuestionText(int param, int operation)
-    {
-        string txtOperation = "";
-        switch (operation)
-        {
-            case 1:
-                txtOperation = "+";
-                break;
-            case 2:
-                txtOperation = "-";
-                break;
-            case 3:
-                txtOperation = "x";
-                break;
-            case 4:
-                txtOperation = ":";
-                break;
-            default:
-                txtOperation = "";
-                break;
-        }
-        txtQuestion.text += param.ToString();
-        txtQuestion.text += txtOperation;
-    }
-    private void ShowRightAnswerText(int right)
-    {
-        txtRightAnswer.text = right.ToString();
     }
     private int RandomNumber(int first, int second)
     {
@@ -317,12 +355,52 @@ public class GameManager : MonoBehaviour
         firstParameter = Calculate(first, second, operation);
         return firstParameter;
     }
+    private void ShowQuestionTextGamePlay(int param, int operation)
+    {
+        string txtOperation = "";
+        switch (operation)
+        {
+            case 1:
+                txtOperation = "+";
+                break;
+            case 2:
+                txtOperation = "-";
+                break;
+            case 3:
+                txtOperation = "x";
+                break;
+            case 4:
+                txtOperation = ":";
+                break;
+            default:
+                txtOperation = "";
+                break;
+        }
+        gamePlayUI.ShowTextQuestion(param.ToString() + txtOperation);
+    }
+    private void ShowRightAnswerText(int right)
+    {
+        txtRightAnswer.text = right.ToString();
+    }
 
+    #endregion
+    public float GetSpeedMove()
+    {
+        return speedInGame;
+    }
+    public void SetScore_CarrotPointGamePlay()
+    {
+        curScore += scoreAchieve;
+        gamePlayUI.SetTextScore(curScore);
+        curCarrotPoint++;
+        gamePlayUI.SetTextCarrotPoint(curCarrotPoint, totalCarrotPoint);
+    }
+    #region StateGame
     /// <summary>
     /// Trạng thái game
     /// </summary>
     /// <param name="state"></param>
-    private void SetState(StateGame state)
+    public void SetState(StateGame state)
     {
         switch (state)
         {
@@ -335,11 +413,13 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0f;
                 break;
             case StateGame.GameOver:
+                gameOverUI.GetScore(curScore);
+                gameOverUI.GetCarrotPoint(curCarrotPoint,totalCarrotPoint);
                 Time.timeScale = 0f;
                 break;
         }
     }
-
+    #endregion
     class Group
     {
         public List<int> operationsInGroup = new List<int>();

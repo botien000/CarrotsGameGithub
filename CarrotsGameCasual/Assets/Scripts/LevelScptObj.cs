@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +12,27 @@ public class LevelScptObj : ScriptableObject
         Multiply = 3,
         Divide = 4
     }
-    public List<Turn> turns;
-
+    public List<TurnLevel> turns;
     [System.Serializable]
-    public class Turn
+    public class TurnLevel
     {
-        public Operation[] operationsSptObj;
+        [Range(1, 10)]
+        public int turnItemRangeFrom;
+        [Range(1, 10)]
+        public int turnItemRangeTo;
+        public int turn;
+        public float speedUp;
+        public Operation[] operationsEnumSptObj;
         public int numberOfOpeSptObj;
+        private int[] operationsSptObj;
+        public int[] GetOperations()
+        {
+            operationsSptObj = new int[operationsSptObj.Length - 1];
+            for (int i = 0; i < operationsEnumSptObj.Length; i++)
+            {
+                operationsSptObj[i] = (int)operationsEnumSptObj[i];
+            }
+            return operationsSptObj;
+        }
     }
 }

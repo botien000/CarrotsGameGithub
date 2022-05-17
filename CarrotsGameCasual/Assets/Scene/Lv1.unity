@@ -474,8 +474,7 @@ MonoBehaviour:
   lowerLimit: 1
   highestLimit: 100
   txtQuestion: {fileID: 1383207376}
-  txtRightAnswer: {fileID: 0}
-  numberOfOperation: 3
+  txtRightAnswer: {fileID: 183405965}
 --- !u!114 &191304462
 MonoBehaviour:
   m_ObjectHideFlags: 0
