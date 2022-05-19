@@ -41,12 +41,12 @@ public class User : MonoBehaviour
         {
             Vector3 swipe = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 dirSwipe = origin - swipe;
-            if (dirSwipe.x < 0f && touch)
+            if (dirSwipe.x < 0f && origin.y == swipe.y && touch)
             {
                 touch = false;
                 GetPos(1);
             }
-            else if (dirSwipe.x > 0f && touch)
+            else if (dirSwipe.x > 0f && origin.y == swipe.y && touch)
             {
                 touch = false;
                 GetPos(-1);

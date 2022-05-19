@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameWait : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +14,9 @@ public class GameWait : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetMouseButtonUp(0))
+        {
+            GameManager.instance.SetState(GameManager.StateGame.GamePlay);
+        }
     }
 }

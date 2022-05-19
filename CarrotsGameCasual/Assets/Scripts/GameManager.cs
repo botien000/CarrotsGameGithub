@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetState(StateGame.GameWait);
         instanceSM = SpawnManager.instance;
         curSpeed = speedInGame;
         RandomTurnItem();
@@ -406,9 +407,11 @@ public class GameManager : MonoBehaviour
         {
             case StateGame.GamePlay:
                 //Màn hình TabToPlay sẽ invisible
+                gameWaitUI.gameObject.SetActive(false);
                 Time.timeScale = 1f;
                 break;
             case StateGame.GameWait:
+                gameWaitUI.gameObject.SetActive(true);
                 //Màn hình TabToPlay sẽ visible
                 Time.timeScale = 0f;
                 break;

@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSourceMusic;
+    [SerializeField] private AudioSource auidoSourceSFX;
+
+    [SerializeField] private AudioClip home;
+    [SerializeField] private AudioClip road;
+    [SerializeField] private AudioClip clickToMap;
+    [SerializeField] private AudioClip getRightAnswer;
+    [SerializeField] private AudioClip getWrongAnswer;
+    [SerializeField] private AudioClip getItem;
+    [SerializeField] private AudioClip gameOver;
+
     //music:
     //nhạc trang chủ
-    //nhạc 4 con đường chạy trong game
+    //nhac gameplay or nhạc 4 con đường chạy trong game
     //sfx:
-    //click chọn map,tabtoplay
+    //click chọn map
     //thỏ ăn đúng trái cà rốt
-    //thỏ nhảy ngang
+    //thỏ ăn sai trái cà rốt
+    //thỏ nhảy ngang(tạm thời bỏ)
     //thỏ nhận item
     //kết thúc game
 
