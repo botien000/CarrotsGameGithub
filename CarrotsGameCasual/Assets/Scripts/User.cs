@@ -10,7 +10,7 @@ public class User : MonoBehaviour
     private Rigidbody2D rgbody;
     private int curIndexPos;
     private Vector3 origin;
-    private bool touch;
+    private bool touch, haveShiled = false;
     private void Awake()
     {
         rgbody = GetComponent<Rigidbody2D>();
@@ -71,8 +71,43 @@ public class User : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       
+       if(collision.gameObject.tag == "item")
+        {
+            // test
+            collision.transform.position = new Vector3(transform.position.x + 2, transform.position.y - 0.5f);
+            collision.gameObject.GetComponent<Item>().Move(0);
+        }
+       if(collision.gameObject.tag == "answer")
+        {
+            Answer answer = collision.gameObject.GetComponent<Answer>();
+            Result(answer.getRightAnswer());
+        }
     }
 
+    
+    private void Result(bool _rightAnswer)
+    {
+        if(_rightAnswer == true)
+        {
 
+        }
+        else
+        {
+            if(haveShiled == false)
+            {
+                // GameOver
+            }
+            else
+            {
+                // tiếp tục chơi
+            }
+
+        }
+    }
+
+    // truyền khiên bảo vệ từ item
+    internal void Shield(bool _haveShiled)
+    {
+        haveShiled = _haveShiled;
+    }
 }
