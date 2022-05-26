@@ -27,10 +27,11 @@ public class LevelScptObj : ScriptableObject
         private int[] operationsSptObj;
         public int[] GetOperations()
         {
-            operationsSptObj = new int[operationsSptObj.Length - 1];
+            operationsSptObj = new int[operationsEnumSptObj.Length];
             for (int i = 0; i < operationsEnumSptObj.Length; i++)
             {
                 operationsSptObj[i] = (int)operationsEnumSptObj[i];
+
             }
             return operationsSptObj;
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSourceMusic;
-    [SerializeField] private AudioSource auidoSourceSFX;
+    [SerializeField] private AudioSource audioSourceSFX;
 
     [SerializeField] private AudioClip home;
     [SerializeField] private AudioClip road;
@@ -45,5 +45,10 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         
+    }
+    public void SetMute(bool mute)
+    {
+        audioSourceMusic.mute = mute;
+        audioSourceSFX.mute = mute;
     }
 }

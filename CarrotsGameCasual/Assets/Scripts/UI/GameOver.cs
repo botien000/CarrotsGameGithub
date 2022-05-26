@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameOver : MonoBehaviour
 {
-    [SerializeField] private TextMeshPro txtScore;
+    [SerializeField] private TextMeshProUGUI txtScore;
     [SerializeField] private Image[] imgCarrotsPoint;
     // Start is called before the first frame update
     void Start()
@@ -26,16 +26,28 @@ public class GameOver : MonoBehaviour
     /// <param name="score"></param>
     public void GetScore(int score)
     {
-        txtScore.text = score.ToString();
+        txtScore.text = "Score:" + score.ToString();
     }
     /// <summary>
     /// Hiện ảnh cà rốt khi kết thúc game
     /// </summary>
     /// <param name="curPoint"></param>
-    /// <param name="totalPoint"></param>
-    public void GetCarrotPoint(int curPoint, int totalPoint)
+    /// <param name="numberOfPoint"></param>
+    public void GetCarrotPoint(int curPoint, int numberOfPoint)
     {
-        imgCarrotsPoint[curPoint / totalPoint].gameObject.SetActive(true);
+        //example:     12 : (30/3) = 1 =>index = 0  
+        int index = (curPoint / numberOfPoint) - 1;
+        for (int i = 0; i < imgCarrotsPoint.Length; i++)
+        {
+            if(index == i)
+            {
+                imgCarrotsPoint[i].fillAmount = 1;
+            }
+            else
+            {
+                imgCarrotsPoint[i].fillAmount = 0;
+            }
+        }
     }
     /// <summary>
     /// Chơi lại màn hiện tại
@@ -50,5 +62,9 @@ public class GameOver : MonoBehaviour
     public void BtnHome()
     {
         //Load Home Screen
+    }
+    public void BtnSound()
+    {
+
     }
 }

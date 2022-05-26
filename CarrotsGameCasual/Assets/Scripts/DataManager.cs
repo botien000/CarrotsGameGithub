@@ -15,7 +15,10 @@ public class DataManager : MonoBehaviour
         if (instance == null)
             instance = this;
     }
-
+    private void Start()
+    {
+        PlayerPrefs.GetInt("Sound", 1);
+    }
     ///<sumary>
     ///Lưu star,score,map vào PlayerPref
     ///</sumary>
@@ -32,15 +35,13 @@ public class DataManager : MonoBehaviour
             PlayerPrefs.SetInt("Map" + level, 1);
         }
         PlayerPrefs.Save();
-
-        
     }
 
     /// <summary>
     /// Get toàn bộ dữ liệu của 5 map
     /// </summary>
     /// <returns>List Map</returns>
-    public List<Map> GetAll()
+    public List<Map> GetAllMap()
     {
         List<Map> maps = new List<Map>();
         Map map = new Map();
@@ -53,6 +54,23 @@ public class DataManager : MonoBehaviour
         }
         PlayerPrefs.Save();
         return maps;
+    }
+    /// <summary>
+    /// Turn on or off sound
+    /// </summary>
+    /// <param name="type"></param>
+    public void SetSound(int type)
+    {
+        PlayerPrefs.SetInt("Sound", type);
+        PlayerPrefs.Save();
+    }
+    /// <summary>
+    /// GetSound
+    /// </summary>
+    /// <returns>Int</returns>
+    public int GetSound()
+    {
+        return PlayerPrefs.GetInt("Sound");
     }
 }
 public class Map

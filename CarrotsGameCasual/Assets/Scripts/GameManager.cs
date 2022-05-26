@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,10 +20,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float increaseSlowly;
     [SerializeField] private int scoreAchieve;
     [SerializeField] private int totalCarrotPoint;
+    [SerializeField] private CategoryItemSctbObj[] categoryItem;
 
-    public Text txtQuestion;
-    public Text txtRightAnswer;
-
+    private Answer[] answers;
     private List<int> listParams;
     private List<int> paramAfter, opeAfter;
     private List<int> paramFull, operationFull;
@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     private int rightAnswer;
     private int curIndexLvScptObj;
     private int turnItem;
+
+    private int firstScoreAchieve;
 
     private int curScore;
     private int curCarrotPoint;
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         paramFull = new List<int>();
         operationFull = new List<int>();
         groups = new List<Group>();
+        answers = new Answer[posSpawnAnswer_Item.Length];
         curTurnInGame = 0;
         curIndexLvScptObj = 0;
         turnItem = 0;
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour
         SetState(StateGame.GameWait);
         instanceSM = SpawnManager.instance;
         curSpeed = speedInGame;
+        firstScoreAchieve = scoreAchieve;
         RandomTurnItem();
     }
 
@@ -82,11 +86,13 @@ public class GameManager : MonoBehaviour
         if (curTurnInGame == turnItem)
         {
             //spawn item
+            Item item = instanceSM.itemPool.SpawnObjInPool(posSpawnAnswer_Item[RandomNumber(0, posSpawnAnswer_Item.Length - 1)]).GetComponent<Item>();
+            item.Init(categoryItem[/*RandomNumber(0, categoryItem.Length - 1)*/0]);
             RandomTurnItem();
             return;
         }
-
         //Initial Question
+        gamePlayUI.ClearText();
         for (int i = levelScptObj.turns.Count - 1; i >= 0; i--)
         {
             //Increase Speed
@@ -102,6 +108,7 @@ public class GameManager : MonoBehaviour
         }
         //Initial Answer
         int indexRight = RandomNumber(1, posSpawnAnswer_Item.Length);
+        //tạo list để kiểm tra đã tồn tại số đó chưa
         List<int> wrongNumbers = new List<int>();
         int wrongNumber;
         for (int i = 0; i < posSpawnAnswer_Item.Length; i++)
@@ -114,15 +121,40 @@ public class GameManager : MonoBehaviour
                 } while (wrongNumber == rightAnswer || wrongNumbers.Contains(wrongNumber));
                 wrongNumbers.Add(wrongNumber);
                 //spawn answer wrong
+                Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
+                answer.Init(wrongNumber, false);
+                answers[i] = answer;
             }
             else
             {
                 //spawn answer right
-
+                Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
+                answer.Init(rightAnswer, true);
+                answers[i] = answer;
             }
         }
-
-
+    }
+    /// <summary>
+    /// Khi player tương tác với câu trả lời thì xử lý huỷ bỏ
+    /// </summary>
+    /// <param name="_answer">Answer</param>
+    public void RemoveAnswers(Answer _answer)
+    {
+        foreach (var answer in answers)
+        {
+            answer.Interact = false;
+            if (_answer == answer)
+            {
+                //hande remove answer is collide
+                answer.HandleDie(true);
+            }
+            else
+            {
+                //hande remove answer isn't collide
+                answer.HandleDie(false);
+            }
+        }
+        NextTurn();
 
     }
     private void RandomTurnItem()
@@ -192,7 +224,6 @@ public class GameManager : MonoBehaviour
         {
             paramAfter = HandleLogicOperation(opeAfter, lowerLimit, highestLimit);
         }
-
         bool y_n = false;
         for (int i = 0; i < paramAfter.Count; i++)
         {
@@ -235,13 +266,11 @@ public class GameManager : MonoBehaviour
                 rightAnswer = Calculate(rightAnswer, paramFull[i], operationFull[i - 1]);
             }
         }
-        ShowRightAnswerText(rightAnswer);
-
     }
     private int FindOperation(int[] _operation)
     {
         int index = RandomNumber(1, _operation.Length);
-        return _operation[index];
+        return _operation[index - 1];
     }
     private int RandomNumber(int first, int second)
     {
@@ -379,11 +408,6 @@ public class GameManager : MonoBehaviour
         }
         gamePlayUI.ShowTextQuestion(param.ToString() + txtOperation);
     }
-    private void ShowRightAnswerText(int right)
-    {
-        txtRightAnswer.text = right.ToString();
-    }
-
     #endregion
     public float GetSpeedMove()
     {
@@ -394,7 +418,37 @@ public class GameManager : MonoBehaviour
         curScore += scoreAchieve;
         gamePlayUI.SetTextScore(curScore);
         curCarrotPoint++;
-        gamePlayUI.SetTextCarrotPoint(curCarrotPoint, totalCarrotPoint);
+        gamePlayUI.SetImgCarrotPoint(curCarrotPoint, totalCarrotPoint);
+    }
+    public void HitPlayer(int heart)
+    {
+        gamePlayUI.ShowHeartPlayer(heart);
+    }
+    /// <summary>
+    /// Lấy câu hỏi cho item
+    /// </summary>
+    /// <returns></returns>
+    public Answer[] TakeAnswers()
+    {
+        return answers;
+    }
+    /// <summary>
+    /// Thay đổi điểm nhận được từ item 
+    /// </summary>
+    /// <param name="number"></param>
+    public void SetScoreFromItem(int number)
+    {
+        //nếu tham số truyền vào là 1 thì trả score về giá trị ban đầu
+        if (number == 1)
+        {
+            scoreAchieve = firstScoreAchieve;
+        }
+        scoreAchieve *= number;
+    }
+    public void ShowFlyScore(Transform pos)
+    {
+        ScoreFly scoreFly = instanceSM.scoreFlyPool.SpawnObjInPool(pos).GetComponent<ScoreFly>();
+        scoreFly.Init(scoreAchieve.ToString());
     }
     #region StateGame
     /// <summary>
@@ -409,15 +463,16 @@ public class GameManager : MonoBehaviour
                 //Màn hình TabToPlay sẽ invisible
                 gameWaitUI.gameObject.SetActive(false);
                 Time.timeScale = 1f;
+                NextTurn();
                 break;
             case StateGame.GameWait:
                 gameWaitUI.gameObject.SetActive(true);
-                //Màn hình TabToPlay sẽ visible
                 Time.timeScale = 0f;
+                //Màn hình TabToPlay sẽ visible
                 break;
             case StateGame.GameOver:
                 gameOverUI.GetScore(curScore);
-                gameOverUI.GetCarrotPoint(curCarrotPoint,totalCarrotPoint);
+                gameOverUI.GetCarrotPoint(curCarrotPoint, totalCarrotPoint);
                 Time.timeScale = 0f;
                 break;
         }

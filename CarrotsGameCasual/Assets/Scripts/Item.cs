@@ -1,73 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
-    private new Rigidbody2D rigidbody2D;
-    public int category;
-    User user;
+    private ButtonItemManager instanceBtnItem;
+    private CategoryItemSctbObj curCategory;
+    private Rigidbody2D rgbody;
+    private Image image;
+    private GameManager instanceGM;
+    private SpawnManager instanceSM;
+    private Vector2 pos;
+    public float speed;
+    private void Awake()
+    {
+        rgbody = GetComponent<Rigidbody2D>();
+        image = GetComponent<Image>();
+    }
+    private void OnEnable()
+    {
+        pos = transform.position;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        user = FindObjectOfType<User>();
-        rigidbody2D.velocity = new Vector2(0, -2);
+        instanceGM = GameManager.instance;
+        instanceSM = SpawnManager.instance;
+        instanceBtnItem = ButtonItemManager.instance;
     }
-
     // Update is called once per frame
     void Update()
     {
-        
-    }
-    internal void Init(int _category)
-    {
-        
-    }
-    internal void Move(float _speed)
-    {
-        rigidbody2D.velocity = new Vector2(0, _speed);
-    }
-    internal void Die()
-    {
-        Destroy(gameObject);
-    }
-    /// <summary>
-    /// 1. 50/50   2. x2   3. đổi câu hỏi  4. khiên
-    /// </summary>
-    /// <returns></returns>
-    internal int getCategory()
-    {
-        return category;
-    }
+        pos += Vector2.down * speed * Time.deltaTime;
+        rgbody.MovePosition(pos);
+        if (transform.position.y <= -6)
+        {
+            Die();
+        }
 
-    /// <summary>
-    /// Giảm 1 nửa đáp án
-    /// </summary>
-    public void HalfAnswer()
-    {
-        
     }
-
-    /// <summary>
-    /// Khiên bảo vệ
-    /// </summary>
-    public void Shield()
+    public void Init(CategoryItemSctbObj category)
     {
-        user.Shield(true);
+        curCategory = category;
+        image.sprite = curCategory.sprite;
     }
-    /// <summary>
-    /// đổi đáp án
-    /// </summary>
-    public void transAnswer()
+    private void Move(float _speed)
     {
 
     }
-    /// <summary>
-    /// nhân đôi điểm
-    /// </summary>
-    public void DoublePoint()
+    public void DieByPlayer()
     {
-
+        instanceGM.NextTurn();
+        ButtonItem buttonItem = instanceBtnItem.SpawnButtonItem();
+        buttonItem.Init(curCategory);
+        instanceSM.itemPool.RemoveObjInPool(gameObject);
     }
+    public void Die()
+    {
+        instanceGM.NextTurn();
+        instanceSM.itemPool.RemoveObjInPool(gameObject);
+    }
+   
 }

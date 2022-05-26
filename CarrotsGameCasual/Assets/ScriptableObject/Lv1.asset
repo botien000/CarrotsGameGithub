@@ -13,18 +13,21 @@ MonoBehaviour:
   m_Name: Lv1
   m_EditorClassIdentifier: 
   turns:
-  - turnItemRangeFrom: 7
-    turnItemRangeTo: 9
-    turn: 10
+  - turnItemRangeFrom: 2
+    turnItemRangeTo: 3
+    turn: 1
+    speedUp: 0
     operationsEnumSptObj: 01000000
     numberOfOpeSptObj: 1
   - turnItemRangeFrom: 7
     turnItemRangeTo: 8
-    turn: 20
+    turn: 10
+    speedUp: 0
     operationsEnumSptObj: 02000000
     numberOfOpeSptObj: 2
   - turnItemRangeFrom: 3
     turnItemRangeTo: 8
-    turn: 30
+    turn: 20
+    speedUp: 0
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 3
