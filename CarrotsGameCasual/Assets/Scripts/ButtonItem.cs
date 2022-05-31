@@ -19,6 +19,7 @@ public class ButtonItem : MonoBehaviour
     {
         player = FindObjectOfType<User>();
         instanceBtnItemM = ButtonItemManager.instance;
+        instanceGM = GameManager.instance;
     }
 
     // Update is called once per frame
@@ -35,10 +36,13 @@ public class ButtonItem : MonoBehaviour
                 HalfAnswer();
                 break;
             case CategoryItemSctbObj.Category.Shield:
+                Shield();
                 break;
             case CategoryItemSctbObj.Category.TransAnswer:
+                TransAnswer();
                 break;
             case CategoryItemSctbObj.Category.DoublePoint:
+                DoublePoint();
                 break;
         }
         //RemoveButton
@@ -75,13 +79,12 @@ public class ButtonItem : MonoBehaviour
         {
             two = Mathf.RoundToInt(Random.Range(1, wrongAnswers.Count));
         } while (two == one);
-        answers[one].ClearTextFromItem();
-        answers[two].ClearTextFromItem();
+        wrongAnswers[one].ClearTextFromItem();
+        wrongAnswers[two].ClearTextFromItem();
     }
     /// <summary>
     /// Khiên bảo vệ
     /// </summary>
-    ///Shield đang hình ảnh mạng,xử lý mạng và ảnh khiên 
     public void Shield()
     {
         player.Shield(true);
@@ -92,7 +95,7 @@ public class ButtonItem : MonoBehaviour
     /// Chưa làm gì
     public void TransAnswer()
     {
-
+        instanceGM.RemoveAnswers(null);
     }
     /// <summary>
     /// Nhân đôi điểm
@@ -102,6 +105,6 @@ public class ButtonItem : MonoBehaviour
     {
         //Sẽ có thời gian giới hạn cho nhân đôi điểm   
         //x2
-        instanceGM.SetScoreFromItem(2);
+        instanceGM.SetScoreFromItem(2,false);
     }
 }

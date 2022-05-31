@@ -7,20 +7,16 @@ public class Item : MonoBehaviour
 {
     private ButtonItemManager instanceBtnItem;
     private CategoryItemSctbObj curCategory;
-    private Rigidbody2D rgbody;
     private Image image;
     private GameManager instanceGM;
     private SpawnManager instanceSM;
-    private Vector2 pos;
-    public float speed;
+    private Road road;
     private void Awake()
     {
-        rgbody = GetComponent<Rigidbody2D>();
         image = GetComponent<Image>();
     }
     private void OnEnable()
     {
-        pos = transform.position;
     }
     // Start is called before the first frame update
     void Start()
@@ -28,12 +24,12 @@ public class Item : MonoBehaviour
         instanceGM = GameManager.instance;
         instanceSM = SpawnManager.instance;
         instanceBtnItem = ButtonItemManager.instance;
+        road = FindObjectOfType<Road>();
     }
     // Update is called once per frame
     void Update()
     {
-        pos += Vector2.down * speed * Time.deltaTime;
-        rgbody.MovePosition(pos);
+        transform.position += road.DistanceRoad2;
         if (transform.position.y <= -6)
         {
             Die();
@@ -44,10 +40,6 @@ public class Item : MonoBehaviour
     {
         curCategory = category;
         image.sprite = curCategory.sprite;
-    }
-    private void Move(float _speed)
-    {
-
     }
     public void DieByPlayer()
     {

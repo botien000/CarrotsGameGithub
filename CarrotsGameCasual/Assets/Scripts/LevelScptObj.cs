@@ -24,6 +24,7 @@ public class LevelScptObj : ScriptableObject
         public float speedUp;
         public Operation[] operationsEnumSptObj;
         public int numberOfOpeSptObj;
+        [HideInInspector]
         private int[] operationsSptObj;
         public int[] GetOperations()
         {

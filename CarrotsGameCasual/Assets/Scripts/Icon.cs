@@ -13,11 +13,12 @@ public class Icon : MonoBehaviour
     private void OnEnable()
     {
         ResetTime();
+        imgIcon = GetComponent<Image>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        imgIcon = GetComponent<Image>();
+        
     }
 
     // Update is called once per frame

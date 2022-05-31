@@ -9,31 +9,28 @@ public class Answer : MonoBehaviour
 {
     private Animator animator;
     private TextMeshProUGUI txtAnswer;
-    private Rigidbody2D rgbody;
     private bool rightAnswer;
     private GameManager instanceGM;
     private SpawnManager instanceSM;
-    private Vector2 pos;
     private bool interact;
-    public float speed;
+    private Road road;
 
     public bool Interact { get => interact; set => interact = value; }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        rgbody = GetComponent<Rigidbody2D>();
         txtAnswer = GetComponentInChildren<TextMeshProUGUI>();
     }
     private void OnEnable()
     {
         interact = true;
-        pos = transform.position;
         SetAnimation(false, true);
     }
     // Start is called before the first frame update
     void Start()
     {
+        road = FindObjectOfType<Road>();
         instanceGM = GameManager.instance;
         instanceSM = SpawnManager.instance;
         interact = true;
@@ -41,17 +38,12 @@ public class Answer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        pos += Vector2.down * speed * Time.deltaTime;
-        rgbody.MovePosition(pos);
+        transform.position += road.DistanceRoad2;
     }
     public void Init(int text, bool answer)
     {
         txtAnswer.text = text.ToString();
         rightAnswer = answer;
-    }
-    private void Move(float _speed)
-    {
-
     }
     public void HandleDie(bool collision)
     {

@@ -15,9 +15,13 @@ public class DataManager : MonoBehaviour
         if (instance == null)
             instance = this;
     }
-    private void Start()
+    private Map GetMap(int level)
     {
-        PlayerPrefs.GetInt("Sound", 1);
+        Map map = new Map();
+        map.open = PlayerPrefs.GetInt("OpenMap" + level, 0);
+        map.star = PlayerPrefs.GetInt("StarOfMap" + level, 0);
+        map.score = PlayerPrefs.GetInt("ScoreOfMap" + level, 0);
+        return map;
     }
     ///<sumary>
     ///Lưu star,score,map vào PlayerPref
@@ -27,12 +31,19 @@ public class DataManager : MonoBehaviour
     ///<param name="score">Score</param>
     public void SaveData(int level, int star, int score)
     {
-        PlayerPrefs.SetInt("StarOfMap" + level, star);
-        PlayerPrefs.SetInt("ScoreOfMap" + level, score);
-        if (star > 0 || level <= 5)
+        Map map = GetMap(level);
+        if(map.star < star)
+        {
+            PlayerPrefs.SetInt("StarOfMap" + level, star);
+        }
+        if(map.score < score)
+        {
+            PlayerPrefs.SetInt("ScoreOfMap" + level, score);
+        }
+        if (star > 0 && level <= 5)
         {
             //open next map
-            PlayerPrefs.SetInt("Map" + level, 1);
+            PlayerPrefs.SetInt("OpenMap" + (level + 1), 1);
         }
         PlayerPrefs.Save();
     }
@@ -44,10 +55,19 @@ public class DataManager : MonoBehaviour
     public List<Map> GetAllMap()
     {
         List<Map> maps = new List<Map>();
-        Map map = new Map();
+        Map map;
         for (int i = 0; i < totalMap; i++)
         {
-            map.level = PlayerPrefs.GetInt("Map" + (i + 1), 0);
+            map = new Map();
+            //auto mở map 1
+            if (i == 0)
+            {
+                map.open = PlayerPrefs.GetInt("OpenMap" + (i + 1), 1);
+            }
+            else
+            {
+                map.open = PlayerPrefs.GetInt("OpenMap" + (i + 1), 0);
+            }
             map.star = PlayerPrefs.GetInt("StarOfMap" + (i + 1), 0);
             map.score = PlayerPrefs.GetInt("ScoreOfMap" + (i + 1), 0);
             maps.Add(map);
@@ -70,12 +90,29 @@ public class DataManager : MonoBehaviour
     /// <returns>Int</returns>
     public int GetSound()
     {
-        return PlayerPrefs.GetInt("Sound");
+        return PlayerPrefs.GetInt("Sound", 1);
+    }
+    /// <summary>
+    /// Turn on or off music
+    /// </summary>
+    /// <param name="type"></param>
+    public void SetMusic(int type)
+    {
+        PlayerPrefs.SetInt("Music", type);
+        PlayerPrefs.Save();
+    }
+    /// <summary>
+    /// GetMusic
+    /// </summary>
+    /// <returns>Int</returns>
+    public int GetMusic()
+    {
+        return PlayerPrefs.GetInt("Music", 1);
     }
 }
 public class Map
 {
-    public int level;
+    public int open;
     public int star;
     public int score;
 }

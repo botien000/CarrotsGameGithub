@@ -9,10 +9,13 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI txtScore;
     [SerializeField] private Image[] imgCarrotsPoint;
+
+
+    private AudioManager instanceAM;
     // Start is called before the first frame update
     void Start()
     {
-
+        instanceAM = AudioManager.instance;
     }
 
     // Update is called once per frame
@@ -33,13 +36,11 @@ public class GameOver : MonoBehaviour
     /// </summary>
     /// <param name="curPoint"></param>
     /// <param name="numberOfPoint"></param>
-    public void GetCarrotPoint(int curPoint, int numberOfPoint)
+    public void GetCarrotPoint(int index)
     {
-        //example:     12 : (30/3) = 1 =>index = 0  
-        int index = (curPoint / numberOfPoint) - 1;
         for (int i = 0; i < imgCarrotsPoint.Length; i++)
         {
-            if(index == i)
+            if (i <= index)
             {
                 imgCarrotsPoint[i].fillAmount = 1;
             }
@@ -49,11 +50,13 @@ public class GameOver : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Chơi lại màn hiện tại
     /// </summary>
     public void BtnPlayAgain()
     {
+        instanceAM.ClickFx();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     /// <summary>
@@ -62,9 +65,11 @@ public class GameOver : MonoBehaviour
     public void BtnHome()
     {
         //Load Home Screen
-    }
-    public void BtnSound()
-    {
+        instanceAM.ClickFx();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Home");
 
     }
+
+
 }

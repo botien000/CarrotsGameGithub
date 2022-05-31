@@ -1,27 +1,28 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class User : MonoBehaviour
 {
     enum State
     {
-        Move, Jump
+        Move, JumpLeft = -1,JumpRight = 1
     }
     [SerializeField] private Transform[] transforms;
     [SerializeField] private Transform posFlyScore;
     [SerializeField] private int heart;
     [SerializeField] private float speedJump;
-    [SerializeField] private Text teext;
+    [SerializeField] private GameObject shieldGO;
 
     private State curState;
     private Animator animator;
     private GameManager instanceGM;
+    private AudioManager instanceAM;
     private Rigidbody2D rgbody;
     private Icon icon;
     private int curIndexPos;
     private int curHeart;
     private Vector3 origin;
     private bool touch, shield = false;
+    private float from, to;
     private void Awake()
     {
         rgbody = GetComponent<Rigidbody2D>();
@@ -31,24 +32,31 @@ public class User : MonoBehaviour
     void Start()
     {
         instanceGM = GameManager.instance;
+        instanceAM = AudioManager.instance;
         curHeart = heart;
         curIndexPos = Mathf.RoundToInt(Random.Range(0f, (transforms.Length - 1) * 1f));
         icon = GetComponentInChildren<Icon>();
         icon.gameObject.SetActive(false);
         transform.position =(Vector2) transforms[curIndexPos].position;
+        shieldGO.SetActive(false);
     }
     // Update is called once per frame
     void Update()
     {
+        if (instanceGM.IsPause)
+            return;
+
         GetTouchMove();
         transform.position = Vector2.MoveTowards(transform.position,transforms[curIndexPos].position, speedJump * Time.deltaTime);
-        if (transform.position.x == transforms[curIndexPos].position.x)
+        //vì lí do lỗi vị trí liên quan đến recttransform nên dùng 2 biến float from và to để check
+        from = transform.position.x * 100;
+        to = transforms[curIndexPos].position.x * 100;
+        if (Mathf.Round(from) == Mathf.Round(to))
         {
             SetAnimation(State.Move);
         }
         else
         {
-            SetAnimation(State.Jump);
         }
     }
     private void GetTouchMove()
@@ -63,6 +71,7 @@ public class User : MonoBehaviour
         //nhận chạm đầu tiên sau đó vuốt màn hình
         if (Input.GetMouseButton(0))
         {
+
             Vector3 swipe = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 dirSwipe = origin - swipe;
             Vector3 dirVector = swipe - origin;
@@ -75,6 +84,7 @@ public class User : MonoBehaviour
             }
             else if (dirSwipe.x > 0f && touch && (angleSwipe <= -135 || angleSwipe >= 135))
             {
+
                 touch = false;
                 GetPos(-1);
 
@@ -89,9 +99,8 @@ public class User : MonoBehaviour
     private void GetPos(int index)
     {
         // điều kiện để nhảy sang ô tiếp theo chỉ được khi vị trí của player đã vào đúng chỗ
-        if (transform.position.x != transforms[curIndexPos].position.x)
+        if (Mathf.Round(from) != Mathf.Round(to))
         {
-            teext.text = "ok" + "   " + transform.position + "      " + transforms[curIndexPos].position;
             return;
         }
 
@@ -108,13 +117,16 @@ public class User : MonoBehaviour
         //left
         if (dir < 0)
         {
-            transform.rotation = Quaternion.AngleAxis(180, Vector3.up);
+            SetAnimation(State.JumpLeft);
         }
         //right
         else if (dir > 0)
         {
-            transform.rotation = Quaternion.AngleAxis(0, Vector3.zero);
+            SetAnimation(State.JumpRight);
         }
+
+        //audio
+        instanceAM.JumpFx();
     }
     private void GetIcon(bool type)
     {
@@ -126,6 +138,7 @@ public class User : MonoBehaviour
         if (collision.gameObject.tag == "Item")
         {
             Item item = collision.GetComponent<Item>();
+            instanceAM.GetItemFx();
             item.DieByPlayer();
         }
         else if (collision.gameObject.tag == "Answer")
@@ -147,8 +160,17 @@ public class User : MonoBehaviour
     {
         if (rightAnswer == true)
         {
-            instanceGM.SetScore_CarrotPointGamePlay();
+            instanceGM.SetScoreGamePlay();
             instanceGM.ShowFlyScore(posFlyScore);
+            //audio
+            instanceAM.RightAnswerFx();
+            GetIcon(rightAnswer);
+            //đáp án đúng nhưng có khiên thì vẫn vỡ
+            if (shield)
+            {
+                shield = false;
+                shieldGO.SetActive(false);
+            }
         }
         else
         {
@@ -157,19 +179,27 @@ public class User : MonoBehaviour
                 // Không có khiên chắn thì sẽ mất mạng
                 curHeart--;
                 instanceGM.HitPlayer(curHeart);
+                //audio
+                instanceAM.WrongAnswerFx();
+                GetIcon(rightAnswer);
             }
             else
             {
                 // Có khiên chắn sẽ không làm mất mạng
+                shield = false;
+                shieldGO.SetActive(false);
+                //audio
+                instanceAM.BreakShieldFx();
             }
         }
-        GetIcon(rightAnswer);
+       
     }
 
     // Truyền khiên bảo vệ từ item
     public void Shield(bool haveShield)
     {
         shield = haveShield;
+        shieldGO.SetActive(true);
     }
     /// <summary>
     /// Khi tương tác với item sau đó mất khiên

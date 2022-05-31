@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e1d54a5d0560b84a9f8866520dfd271, type: 3}
   m_Name: Shield
   m_EditorClassIdentifier: 
-  curCategory: 0
+  curCategory: 1
   sprite: {fileID: 21300000, guid: d0570e0a4f16eba4f83ec3987fd1b97f, type: 3}

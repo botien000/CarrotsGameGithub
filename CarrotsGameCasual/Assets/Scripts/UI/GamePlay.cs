@@ -10,7 +10,13 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private Image[] imgCarrotPoint;
     [SerializeField] private TextMeshProUGUI txtQuestion;
     [SerializeField] private Image[] imgHeart;
+    [SerializeField] private float timeX2;
+    [SerializeField] private Image imgFillX2;
+    
 
+    private GameManager instanceGM;
+    private bool triggerX2;
+    private float curTimeX2;
     private void OnEnable()
     {
         ClearUI();
@@ -18,13 +24,24 @@ public class GamePlay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        instanceGM = GameManager.instance;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (triggerX2)
+        {
+            curTimeX2 -= Time.deltaTime;
+            imgFillX2.fillAmount = curTimeX2 * 1 / timeX2;
+            if(curTimeX2 <= 0)
+            {
+                instanceGM.SetScoreFromItem(1, true);
+                triggerX2 = false;
+                curTimeX2 = timeX2;
+                imgFillX2.gameObject.SetActive(false);
+            }
+        }
     }
     /// <summary>
     /// Hiện điểm trên UI
@@ -39,23 +56,28 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     /// <param name="curPoint">curPoint</param>
     /// <param name="totalPoint">totalPoint</param>
-    public void SetImgCarrotPoint(float curPoint,float totalPoint)
+    public void SetImgCarrotPoint(int index,float value)
     {
-        if(totalPoint < imgCarrotPoint.Length || totalPoint % imgCarrotPoint.Length != 0)
-        {
-            Debug.LogError("Bug logic.Fix!!!");
+        //if(totalPoint < imgCarrotPoint.Length || totalPoint % imgCarrotPoint.Length != 0)
+        //{
+        //    Debug.LogError("Bug logic.Fix!!!");
+        //    return;
+        //}
+        ////nếu điểm hiện tại lớn hơn điểm tổng thì không cần xử lý hình ảnh cà rốt
+        //if (curPoint > totalPoint)
+        //    return;
+        //int index = (int)(curPoint / (totalPoint / imgCarrotPoint.Length));
+        ////trường hợp tìm ra index nhưng chia không dư thì giảm index một giá trị
+        //if ((curPoint % (totalPoint / imgCarrotPoint.Length)) == 0)
+        //{
+        //    index -= 1;
+        //}
+        //imgCarrotPoint[index].fillAmount = curPoint / (totalPoint / imgCarrotPoint.Length) - (float)index;
+        // nếu index > số lượng imgCarrot thì return
+        if (index >= imgCarrotPoint.Length)
             return;
-        }
-        //nếu điểm hiện tại lớn hơn điểm tổng thì không cần xử lý hình ảnh cà rốt
-        if (curPoint > totalPoint)
-            return;
-        int index = (int)(curPoint / (totalPoint / imgCarrotPoint.Length));
-        //trường hợp tìm ra index nhưng chia không dư thì giảm index một giá trị
-        if ((curPoint % (totalPoint / imgCarrotPoint.Length)) == 0)
-        {
-            index -= 1;
-        }
-        imgCarrotPoint[index].fillAmount = curPoint / (totalPoint / imgCarrotPoint.Length) - (float)index;
+
+        imgCarrotPoint[index].fillAmount = value;
     }   
     public void ShowTextQuestion(string question)
     {
@@ -65,9 +87,9 @@ public class GamePlay : MonoBehaviour
     {
         txtQuestion.text = "";
     }
-    public void BtnEnd()
+    public void BtnSetting()
     {
-        GameManager.instance.SetState(GameManager.StateGame.GameOver);
+        GameManager.instance.SetState(GameManager.StateGame.GameSetting);
     }
     private void ClearUI()
     {
@@ -93,5 +115,11 @@ public class GamePlay : MonoBehaviour
                 }
             }
         }
+    }
+    public void TimeX2()
+    {
+        curTimeX2 = timeX2;
+        triggerX2 = true;
+        imgFillX2.gameObject.SetActive(true);
     }
 }
