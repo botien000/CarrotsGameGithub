@@ -9,7 +9,7 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI txtScore;
     [SerializeField] private Image[] imgCarrotsPoint;
-
+    [SerializeField] private LoadingScreen loadingScreen;
 
     private AudioManager instanceAM;
     // Start is called before the first frame update
@@ -67,7 +67,9 @@ public class GameOver : MonoBehaviour
         //Load Home Screen
         instanceAM.ClickFx();
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Home");
+        //SceneManager.LoadScene("Home");
+        loadingScreen.gameObject.SetActive(true);
+        loadingScreen.LoadSceneHome();
 
     }
 

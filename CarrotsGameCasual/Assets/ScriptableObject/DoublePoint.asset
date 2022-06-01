@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: DoublePoint
   m_EditorClassIdentifier: 
   curCategory: 3
-  sprite: {fileID: 21300000, guid: a6e79fcc79acdb74989d93f2bf6b4b3c, type: 3}
+  sprite: {fileID: 21300000, guid: 2971bf745ec24d6439042010ad07feae, type: 3}

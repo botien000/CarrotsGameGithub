@@ -13,7 +13,9 @@ public class HomeUI : MonoBehaviour
     [SerializeField] private Sprite imgMusicOn, imgMusicOff;
     [SerializeField] private Image imgMusic;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private LoadingScreen loadingScreen;
 
+    public float value;
     private int stateMusic;//0:off  1:on
     private List<Map> maps;
     private DataManager instanceDM;
@@ -32,7 +34,6 @@ public class HomeUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
     private void HandleButtonMap()
     {
@@ -104,8 +105,11 @@ public class HomeUI : MonoBehaviour
     }
     public void BtnMap(int level)
     {
-        SceneManager.LoadScene("Lv" + level);
+        //SceneManager.LoadScene("Lv" + level);
+        loadingScreen.gameObject.SetActive(true);
+        loadingScreen.LoadSceneGamePlay(level);
     }
+
     [System.Serializable]
     class CarrotMap
     {

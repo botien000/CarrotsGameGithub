@@ -10,6 +10,7 @@ public class GameSetting : MonoBehaviour
     [SerializeField] private Image imgSound;
     [SerializeField] private Sprite imgMusicOn, imgMusicOff;
     [SerializeField] private Image imgMusic;
+    [SerializeField] private LoadingScreen loadingScreen;
 
     private AudioManager instanceAM;
     private GameManager instanceGM;
@@ -27,7 +28,9 @@ public class GameSetting : MonoBehaviour
     }
     public void BtnHome()
     {
-        SceneManager.LoadScene("Home");
+        //SceneManager.LoadScene("Home");
+        loadingScreen.gameObject.SetActive(true);
+        loadingScreen.LoadSceneHome();
     }
     public void BtnRestart()
     {

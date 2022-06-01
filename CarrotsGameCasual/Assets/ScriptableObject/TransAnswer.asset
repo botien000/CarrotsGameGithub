@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: TransAnswer
   m_EditorClassIdentifier: 
   curCategory: 2
-  sprite: {fileID: 21300000, guid: 8330d50e8fbf8da449ea72b40874511f, type: 3}
+  sprite: {fileID: 21300000, guid: 701cd01924f5df9418d2a8ec69a8ebbe, type: 3}
