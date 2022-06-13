@@ -14,6 +14,7 @@ public class HomeUI : MonoBehaviour
     [SerializeField] private Image imgMusic;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private LoadingScreen loadingScreen;
+    [SerializeField] private GameObject ExitGamePanel;
 
     public float value;
     private int stateMusic;//0:off  1:on
@@ -102,6 +103,23 @@ public class HomeUI : MonoBehaviour
             stateMusic = 1;
         }
         HandleAudio();
+    }
+    public void BtnExitGame()
+    {
+        //mở panel exit game
+        ExitGamePanel.SetActive(true);
+    }
+    public void BtnYes_No(bool y_n)
+    {
+        if (y_n)
+        {
+            //quit
+            Application.Quit();
+        }
+        else
+        {
+            ExitGamePanel.SetActive(false);
+        }
     }
     public void BtnMap(int level)
     {

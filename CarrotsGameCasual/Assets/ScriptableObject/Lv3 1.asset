@@ -10,60 +10,54 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6a738d91a56fb140b17a0b33a98893c, type: 3}
-  m_Name: Lv3
+  m_Name: Lv3 1
   m_EditorClassIdentifier: 
   turns:
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 8
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
     turn: 1
     speedUp: 0.3
     operationsEnumSptObj: 01000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 8
-    turn: 10
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 3
     speedUp: 0
     operationsEnumSptObj: 03000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 7
-    turn: 20
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 5
     speedUp: 1
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 7
-    turn: 30
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 7
     speedUp: -1
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 3
-    turnItemRangeTo: 5
-    turn: 50
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 9
     speedUp: 0.5
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 2
-    turnItemRangeTo: 4
-    turn: 60
-    speedUp: 0.3
-    operationsEnumSptObj: 0100000003000000
-    numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 7
-    turn: 70
-    speedUp: -0.8
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 11
+    speedUp: -0.5
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 3
-  - turnItemRangeFrom: 2
-    turnItemRangeTo: 5
-    turn: 80
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 13
     speedUp: 0.3
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 3
-  - turnItemRangeFrom: 2
-    turnItemRangeTo: 4
-    turn: 90
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 15
     speedUp: 0.2
     operationsEnumSptObj: 0100000003000000
     numberOfOpeSptObj: 3

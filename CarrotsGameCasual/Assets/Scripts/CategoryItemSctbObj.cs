@@ -8,7 +8,7 @@ public class CategoryItemSctbObj : ScriptableObject
     
     public enum Category
     {
-        HalfAnswer, Shield, TransAnswer, DoublePoint
+        HalfAnswer, Shield, TransAnswer, DoublePoint,SlowSpeed,Heart
     }
     public Category curCategory;
     public Sprite sprite;

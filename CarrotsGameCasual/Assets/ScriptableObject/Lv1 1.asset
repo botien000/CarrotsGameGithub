@@ -10,78 +10,78 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6a738d91a56fb140b17a0b33a98893c, type: 3}
-  m_Name: Lv1
+  m_Name: Lv1 1
   m_EditorClassIdentifier: 
   turns:
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 8
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
     turn: 1
     speedUp: 0.3
     operationsEnumSptObj: 01000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 8
-    turn: 15
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 3
     speedUp: 0
     operationsEnumSptObj: 02000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 7
-    turn: 30
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 5
     speedUp: 1
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 1
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 8
-    turn: 45
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 7
     speedUp: -1
     operationsEnumSptObj: 01000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 6
-    turnItemRangeTo: 7
-    turn: 60
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 9
     speedUp: 0
     operationsEnumSptObj: 02000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 6
-    turn: 75
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 11
     speedUp: 0.2
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 3
-    turnItemRangeTo: 6
-    turn: 85
+  - turnItemRangeFrom: 9
+    turnItemRangeTo: 10
+    turn: 13
     speedUp: 0.3
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 6
-    turn: 95
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 14
     speedUp: 0.3
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 2
-  - turnItemRangeFrom: 5
-    turnItemRangeTo: 7
-    turn: 105
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 15
     speedUp: -0.8
     operationsEnumSptObj: 01000000
     numberOfOpeSptObj: 3
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 8
-    turn: 120
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 17
     speedUp: 0
     operationsEnumSptObj: 02000000
     numberOfOpeSptObj: 3
-  - turnItemRangeFrom: 3
-    turnItemRangeTo: 6
-    turn: 140
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 19
     speedUp: 0.2
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 3
-  - turnItemRangeFrom: 4
-    turnItemRangeTo: 6
-    turn: 155
+  - turnItemRangeFrom: 10
+    turnItemRangeTo: 10
+    turn: 21
     speedUp: 0.3
     operationsEnumSptObj: 0100000002000000
     numberOfOpeSptObj: 3

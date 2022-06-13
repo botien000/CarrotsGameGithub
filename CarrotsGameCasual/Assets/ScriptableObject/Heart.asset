@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e1d54a5d0560b84a9f8866520dfd271, type: 3}
-  m_Name: Shield
+  m_Name: Heart
   m_EditorClassIdentifier: 
-  curCategory: 1
-  sprite: {fileID: 21300000, guid: 00ca24ae070880d4f8f9e4e48b332cf8, type: 3}
+  curCategory: 5
+  sprite: {fileID: 21300000, guid: f8236c5ab4280ec4fab8d4a4cb7d8062, type: 3}

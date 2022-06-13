@@ -4,7 +4,7 @@ public class User : MonoBehaviour
 {
     enum State
     {
-        Move, JumpLeft = -1,JumpRight = 1
+        Move, JumpLeft = -1, JumpRight = 1
     }
     [SerializeField] private Transform[] transforms;
     [SerializeField] private Transform posFlyScore;
@@ -37,7 +37,7 @@ public class User : MonoBehaviour
         curIndexPos = Mathf.RoundToInt(Random.Range(0f, (transforms.Length - 1) * 1f));
         icon = GetComponentInChildren<Icon>();
         icon.gameObject.SetActive(false);
-        transform.position =(Vector2) transforms[curIndexPos].position;
+        transform.position = (Vector2)transforms[curIndexPos].position;
         shieldGO.SetActive(false);
     }
     // Update is called once per frame
@@ -47,7 +47,7 @@ public class User : MonoBehaviour
             return;
 
         GetTouchMove();
-        transform.position = Vector2.MoveTowards(transform.position,transforms[curIndexPos].position, speedJump * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, transforms[curIndexPos].position, speedJump * Time.deltaTime);
         //vì lí do lỗi vị trí liên quan đến recttransform nên dùng 2 biến float from và to để check
         from = transform.position.x * 100;
         to = transforms[curIndexPos].position.x * 100;
@@ -84,7 +84,6 @@ public class User : MonoBehaviour
             }
             else if (dirSwipe.x > 0f && touch && (angleSwipe <= -135 || angleSwipe >= 135))
             {
-
                 touch = false;
                 GetPos(-1);
 
@@ -180,7 +179,9 @@ public class User : MonoBehaviour
                 curHeart--;
                 instanceGM.HitPlayer(curHeart);
                 //audio
-                instanceAM.WrongAnswerFx();
+                if (curHeart > 0)
+                    instanceAM.WrongAnswerFx();
+
                 GetIcon(rightAnswer);
             }
             else
@@ -192,7 +193,7 @@ public class User : MonoBehaviour
                 instanceAM.BreakShieldFx();
             }
         }
-       
+
     }
 
     // Truyền khiên bảo vệ từ item
@@ -201,14 +202,17 @@ public class User : MonoBehaviour
         shield = haveShield;
         shieldGO.SetActive(true);
     }
+    public void GetHeartFromItem()
+    {
+        //nếu mạng hiện tại của player đã đầy thì không tăng mạnh cho player
+        if (curHeart == heart)
+            return;
+        curHeart++;
+        instanceGM.HitPlayer(curHeart);
+    }
     /// <summary>
     /// Khi tương tác với item sau đó mất khiên
     /// </summary>
-    private void BreakShield()
-    {
-        shield = false;
-        //thay đổi ảnh có khiên nhưng mà chưa có
-    }
     private void SetAnimation(State state)
     {
         if (curState == state)

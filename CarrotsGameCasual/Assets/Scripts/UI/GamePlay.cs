@@ -12,11 +12,15 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private Image[] imgHeart;
     [SerializeField] private float timeX2;
     [SerializeField] private Image imgFillX2;
-    
+    [SerializeField] private float timeSlow;
+    [SerializeField] private Image imgFillSlow;
+
 
     private GameManager instanceGM;
     private bool triggerX2;
     private float curTimeX2;
+    private bool triggerSlow;
+    private float curTimeSlow;
     private void OnEnable()
     {
         ClearUI();
@@ -36,10 +40,22 @@ public class GamePlay : MonoBehaviour
             imgFillX2.fillAmount = curTimeX2 * 1 / timeX2;
             if(curTimeX2 <= 0)
             {
-                instanceGM.SetScoreFromItem(1, true);
+                instanceGM.SetScoreFromItem(1);
                 triggerX2 = false;
                 curTimeX2 = timeX2;
                 imgFillX2.gameObject.SetActive(false);
+            }
+        }
+        if (triggerSlow)
+        {
+            curTimeSlow -= Time.deltaTime;
+            imgFillSlow.fillAmount = curTimeSlow * 1 / timeSlow;
+            if (curTimeSlow <= 0)
+            {
+                instanceGM.SetSlowInGameFromItem(1);
+                triggerSlow = false;
+                curTimeSlow = timeSlow;
+                imgFillSlow.gameObject.SetActive(false);
             }
         }
     }
@@ -121,5 +137,11 @@ public class GamePlay : MonoBehaviour
         curTimeX2 = timeX2;
         triggerX2 = true;
         imgFillX2.gameObject.SetActive(true);
+    }
+    public void TimeSlow()
+    {
+        curTimeSlow = timeSlow;
+        triggerSlow = true;
+        imgFillSlow.gameObject.SetActive(true);
     }
 }

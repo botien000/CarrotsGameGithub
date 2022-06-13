@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class GameManager : MonoBehaviour
 {
     public enum StateGame
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     private int curTurnItem;
 
     private int firstScoreAchieve;
+    private float valueSlowInGame;
 
     private bool isPause;
     public bool IsPause => isPause;
@@ -88,7 +90,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        curSpeed += increaseSlowly;
+        curSpeed += increaseSlowly * Time.deltaTime;
         SetCounterCarrot();
     }
     private void SetCounterCarrot()
@@ -104,60 +106,71 @@ public class GameManager : MonoBehaviour
     #region Turn
     public void NextTurn()
     {
-        curTurnInGame++;
-        //Initial Item
-        if (curTurnInGame == turnItem)
+        try
         {
-            curTurnItem = turnItem;
-            //spawn item
-            Item item = instanceSM.itemPool.SpawnObjInPool(posSpawnAnswer_Item[RandomNumber(0, posSpawnAnswer_Item.Length - 1)]).GetComponent<Item>();
-            item.Init(categoryItem[RandomNumber(0, categoryItem.Length - 1)]);
-            RandomTurnItem();
-            return;
-        }
-        //Initial Question
-        gamePlayUI.ClearText();
-        for (int i = levelScptObj.turns.Count - 1; i >= 0; i--)
-        {
-            //Increase Speed
-            if (curTurnInGame == levelScptObj.turns[i].turn)
-                curSpeed += levelScptObj.turns[i].speedUp;
 
-            if (curTurnInGame >= levelScptObj.turns[i].turn)
+
+            curTurnInGame++;
+            //Initial Item
+            if (curTurnInGame == turnItem)
             {
-                curIndexLvScptObj = i;
-                HandleQuestion(levelScptObj.turns[i].numberOfOpeSptObj, levelScptObj.turns[i].GetOperations());
-                break;
+                curTurnItem = turnItem;
+                //spawn item
+                Item item = instanceSM.itemPool.SpawnObjInPool(posSpawnAnswer_Item[RandomNumber(0, posSpawnAnswer_Item.Length - 1)]).GetComponent<Item>();
+                item.Init(categoryItem[RandomNumber(0, categoryItem.Length - 1)]);
+                RandomTurnItem();
+                return;
             }
-        }
-        //Initial Answer
-        int indexRight = RandomNumber(0, posSpawnAnswer_Item.Length - 1);
-        //tạo list để kiểm tra đã tồn tại số đó chưa
-        List<int> wrongNumbers = new List<int>();
-        int wrongNumber;
-        for (int i = 0; i < posSpawnAnswer_Item.Length; i++)
-        {
-            if (i != indexRight)
+            //Initial Question
+            gamePlayUI.ClearText();
+            for (int i = levelScptObj.turns.Count - 1; i >= 0; i--)
             {
-                do
+                //Increase Speed
+                if (curTurnInGame == levelScptObj.turns[i].turn)
+                    curSpeed += levelScptObj.turns[i].speedUp;
+
+                if (curTurnInGame >= levelScptObj.turns[i].turn)
                 {
-                    wrongNumber = RandomNumber(lowerLimit, highestLimit);
-                } while (wrongNumber == rightAnswer || wrongNumbers.Contains(wrongNumber));
-                wrongNumbers.Add(wrongNumber);
-                //spawn answer wrong
-                Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
-                answer.Init(wrongNumber, false);
-                answers[i] = answer;
+                    curIndexLvScptObj = i;
+                    HandleQuestion(levelScptObj.turns[i].numberOfOpeSptObj, levelScptObj.turns[i].GetOperations());
+                    break;
+                }
             }
-            else
+            //Initial Answer
+            int indexRight = RandomNumber(0, posSpawnAnswer_Item.Length - 1);
+            //tạo list để kiểm tra đã tồn tại số đó chưa
+            List<int> wrongNumbers = new List<int>();
+            int wrongNumber;
+            for (int i = 0; i < posSpawnAnswer_Item.Length; i++)
             {
-                //spawn answer right
-                Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
-                answer.Init(rightAnswer, true);
-                answers[i] = answer;
+                if (i != indexRight)
+                {
+                    do
+                    {
+                        wrongNumber = RandomNumber(lowerLimit, highestLimit);
+                    } while (wrongNumber == rightAnswer || wrongNumbers.Contains(wrongNumber));
+                    wrongNumbers.Add(wrongNumber);
+                    //spawn answer wrong
+                    Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
+                    answer.Init(wrongNumber, false);
+                    answers[i] = answer;
+                }
+                else
+                {
+                    //spawn answer right
+                    Answer answer = instanceSM.answersPool.SpawnObjInPool(posSpawnAnswer_Item[i]).GetComponent<Answer>();
+                    answer.Init(rightAnswer, true);
+                    answers[i] = answer;
+                }
             }
+        }catch(System.Exception e)
+        {
+            Debug.Log(e);
+            Application.Quit();
         }
     }
+
+
     /// <summary>
     /// Khi player tương tác với câu trả lời thì xử lý huỷ bỏ
     /// </summary>
@@ -186,7 +199,7 @@ public class GameManager : MonoBehaviour
     }
     private void RandomTurnItem()
     {
-        turnItem += RandomNumber(levelScptObj.turns[curIndexLvScptObj].turnItemRangeFrom, levelScptObj.turns[curIndexLvScptObj].turnItemRangeTo);
+        turnItem += RandomNumber(levelScptObj.turns[curIndexLvScptObj].turnItemRangeFrom, levelScptObj.turns[curIndexLvScptObj].turnItemRangeTo);   
     }
     private void HandleQuestion(int numberOfOperation, int[] operations)
     {
@@ -466,18 +479,22 @@ public class GameManager : MonoBehaviour
     /// Thay đổi điểm nhận được từ item (biển clear để check nó hiện image thời gian
     /// </summary>
     /// <param name="number"></param>
-    public void SetScoreFromItem(int number,bool clear)
+    public void SetScoreFromItem(int number)
     {
         
         //nếu tham số truyền vào là 1 thì trả score về giá trị ban đầu
-        if (number == 1)
-        {
-            scoreAchieve = firstScoreAchieve;
-        }
         scoreAchieve = firstScoreAchieve;
         scoreAchieve *= number;
-        if (!clear)
+        if (number != 1)
             gamePlayUI.TimeX2();
+    }
+
+    public void SetSlowInGameFromItem(int slowValue)
+    {
+        curSpeed += valueSlowInGame;
+        valueSlowInGame = curSpeed - curSpeed / slowValue;
+        curSpeed /= slowValue;
+        gamePlayUI.TimeSlow();
     }
     public void ShowFlyScore(Transform pos)
     {
@@ -531,7 +548,7 @@ public class GameManager : MonoBehaviour
                 break;
             case StateGame.GameSetting:
                 isPause = true;
-                Time.timeScale = 0f;
+                Time.timeScale = 1f;
                 gameSettingUI.gameObject.SetActive(true);
                 break;
         }

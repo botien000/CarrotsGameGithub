@@ -44,10 +44,18 @@ public class ButtonItem : MonoBehaviour
             case CategoryItemSctbObj.Category.DoublePoint:
                 DoublePoint();
                 break;
+            case CategoryItemSctbObj.Category.SlowSpeed:
+                SlowSpeed();
+                break;
+            case CategoryItemSctbObj.Category.Heart:
+                Heart();
+                break;
         }
         //RemoveButton
         instanceBtnItemM.RemoveObjInPool(this);
     }
+
+
     public void Init(CategoryItemSctbObj cate)
     {
         category = cate;
@@ -61,7 +69,7 @@ public class ButtonItem : MonoBehaviour
     /// Giảm nửa đáp án (cụ thể là 2 đáp án)
     /// </summary>
     /// Thiếu bắt điều kiện nếu trong kho có 2 item 50/50 trở lên thì chỉ cho chọn 1 item 
-    public void HalfAnswer()
+    private void HalfAnswer()
     {
         //2 biến sẽ loại bỏ phần text của answer
         int one, two;
@@ -85,7 +93,7 @@ public class ButtonItem : MonoBehaviour
     /// <summary>
     /// Khiên bảo vệ
     /// </summary>
-    public void Shield()
+    private void Shield()
     {
         player.Shield(true);
     }
@@ -93,7 +101,7 @@ public class ButtonItem : MonoBehaviour
     /// Đổi đáp án
     /// </summary>
     /// Chưa làm gì
-    public void TransAnswer()
+    private void TransAnswer()
     {
         instanceGM.RemoveAnswers(null);
     }
@@ -101,10 +109,21 @@ public class ButtonItem : MonoBehaviour
     /// Nhân đôi điểm
     /// </summary>
     /// Thiếu thời gian và hình ảnh
-    public void DoublePoint()
+    private void DoublePoint()
     {
         //Sẽ có thời gian giới hạn cho nhân đôi điểm   
         //x2
-        instanceGM.SetScoreFromItem(2,false);
+        instanceGM.SetScoreFromItem(2);
     }
+    private void Heart()
+    {
+        player.GetHeartFromItem();
+    }
+
+    private void SlowSpeed()
+    {
+        //slow x2
+        instanceGM.SetSlowInGameFromItem(2);
+    }
+
 }
