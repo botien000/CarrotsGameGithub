@@ -44,9 +44,11 @@ public class Item : MonoBehaviour
     public void DieByPlayer()
     {
         instanceGM.NextTurn();
-        ButtonItem buttonItem = instanceBtnItem.SpawnButtonItem();
-        buttonItem.Init(curCategory);
+        instanceBtnItem.SpawnButtonItem(curCategory);
+        //buttonItem.Init(curCategory);
         instanceSM.itemPool.RemoveObjInPool(gameObject);
+        ParticleManager particle = instanceSM.vfxPool.SpawnObjInPool(transform).GetComponent<ParticleManager>();
+        particle.Init(curCategory.sptVFX);
     }
     public void Die()
     {

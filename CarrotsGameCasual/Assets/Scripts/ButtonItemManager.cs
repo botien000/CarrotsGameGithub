@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ButtonItemManager : MonoBehaviour
 {
-    [SerializeField] private List<ButtonItem> activeBtnItems;
     [SerializeField] private List<ButtonItem> inactiveBtnItems;
+
+    private List<CategoryItemSctbObj> categories = new List<CategoryItemSctbObj>();
 
     /// <summary>
     /// Singleton 
@@ -29,62 +30,45 @@ public class ButtonItemManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    public ButtonItem SpawnButtonItem()
+    public void SpawnButtonItem(CategoryItemSctbObj category)
     {
-        ButtonItem buttonItem;
-        //Lấy button đang inVisible
-        if (inactiveBtnItems.Count > 0)
+        //bỏ item đầu thêm item mới ở cuối
+        if (categories.Count == inactiveBtnItems.Count)
         {
-            //nếu có tồn tại gameObject thì lấy ra một gameobj
-            buttonItem = inactiveBtnItems[0];
-            activeBtnItems.Add(buttonItem);
-            inactiveBtnItems.Remove(buttonItem);
-            buttonItem.gameObject.SetActive(true);
+            categories.RemoveAt(0);
         }
-        //trường hợp không còn button nào inVisible thì bỏ button đầu sắp xếp lại để button mới nằm cuối
-        else
-        {
-            SortOfButtonItem(0);
-            buttonItem = activeBtnItems[activeBtnItems.Count - 1];
-        }
-        return buttonItem;
+        categories.Add(category);
+        SortOfButtonItem();
     }
     public void RemoveObjInPool(ButtonItem buttonItem)
     {
-        if (activeBtnItems.Contains(buttonItem))
-        {
-            int index = activeBtnItems.IndexOf(buttonItem);
-            SortOfButtonItem(index);
-            //remove button cuoi 
-            buttonItem = activeBtnItems[activeBtnItems.Count - 1];
-            inactiveBtnItems.Add(buttonItem);
-            activeBtnItems.Remove(buttonItem);
-            buttonItem.gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("Not found " + gameObject.name + "Bug logic.Fix Bug!!!");
-        }
+        int index = inactiveBtnItems.IndexOf(buttonItem);
+        categories.RemoveAt(index);
+        SortOfButtonItem();
     }
     public void ClearObjInPool()
     {
-        activeBtnItems.Clear();
         inactiveBtnItems.Clear();
+        categories.Clear();
     }
-    private void SortOfButtonItem(int index)
+    private void SortOfButtonItem()
     {
-        while(index < activeBtnItems.Count)
+        ButtonItem buttonItem;
+        for (int i = 0; i < inactiveBtnItems.Count; i++)
         {
-            //if(index == active.count - 1) => remove =>inactive.add
-            //a[index].sprite = a[index - 1]
-            if(index == activeBtnItems.Count - 1)
+            if (i < categories.Count)
             {
-                break;
+                inactiveBtnItems[i].gameObject.SetActive(true);
+                buttonItem = inactiveBtnItems[i];
+                buttonItem.Init(categories[i]);
             }
-            activeBtnItems[index].Init(activeBtnItems[index + 1].GetCategory());
-            index++;
+            else
+            {
+                inactiveBtnItems[i].gameObject.SetActive(false);
+            }
         }
+
     }
 }

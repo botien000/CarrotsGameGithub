@@ -15,7 +15,7 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private float timeSlow;
     [SerializeField] private Image imgFillSlow;
 
-
+    private AudioManager instanceAM;
     private GameManager instanceGM;
     private bool triggerX2;
     private float curTimeX2;
@@ -28,6 +28,7 @@ public class GamePlay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        instanceAM = AudioManager.instance;
         instanceGM = GameManager.instance;
     }
 
@@ -74,22 +75,7 @@ public class GamePlay : MonoBehaviour
     /// <param name="totalPoint">totalPoint</param>
     public void SetImgCarrotPoint(int index,float value)
     {
-        //if(totalPoint < imgCarrotPoint.Length || totalPoint % imgCarrotPoint.Length != 0)
-        //{
-        //    Debug.LogError("Bug logic.Fix!!!");
-        //    return;
-        //}
-        ////nếu điểm hiện tại lớn hơn điểm tổng thì không cần xử lý hình ảnh cà rốt
-        //if (curPoint > totalPoint)
-        //    return;
-        //int index = (int)(curPoint / (totalPoint / imgCarrotPoint.Length));
-        ////trường hợp tìm ra index nhưng chia không dư thì giảm index một giá trị
-        //if ((curPoint % (totalPoint / imgCarrotPoint.Length)) == 0)
-        //{
-        //    index -= 1;
-        //}
-        //imgCarrotPoint[index].fillAmount = curPoint / (totalPoint / imgCarrotPoint.Length) - (float)index;
-        // nếu index > số lượng imgCarrot thì return
+
         if (index >= imgCarrotPoint.Length)
             return;
 
@@ -105,7 +91,8 @@ public class GamePlay : MonoBehaviour
     }
     public void BtnSetting()
     {
-        GameManager.instance.SetState(GameManager.StateGame.GameSetting);
+        instanceAM.ClickFx();
+        instanceGM.SetState(GameManager.StateGame.GameSetting);
     }
     private void ClearUI()
     {

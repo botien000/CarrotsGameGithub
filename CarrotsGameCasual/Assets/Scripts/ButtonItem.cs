@@ -8,6 +8,7 @@ public class ButtonItem : MonoBehaviour
     private Image image;
     private CategoryItemSctbObj category;
     private GameManager instanceGM;
+    private AudioManager instanceAM;
     private ButtonItemManager instanceBtnItemM;
     private User player;
     private void Awake()
@@ -20,6 +21,7 @@ public class ButtonItem : MonoBehaviour
         player = FindObjectOfType<User>();
         instanceBtnItemM = ButtonItemManager.instance;
         instanceGM = GameManager.instance;
+        instanceAM = AudioManager.instance;
     }
 
     // Update is called once per frame
@@ -29,6 +31,7 @@ public class ButtonItem : MonoBehaviour
     }
     public void BtnItemClicked()
     {
+        instanceAM.UseItemFx();
         //HandleItem
         switch (category.curCategory)
         {
@@ -103,7 +106,7 @@ public class ButtonItem : MonoBehaviour
     /// Chưa làm gì
     private void TransAnswer()
     {
-        instanceGM.RemoveAnswers(null);
+        instanceGM.RemoveAnswers(null,-1);
     }
     /// <summary>
     /// Nhân đôi điểm

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HalfAnswer
   m_EditorClassIdentifier: 
   curCategory: 0
-  sprite: {fileID: 21300000, guid: 7ab9b80965374de4793cd40b5336ffaa, type: 3}
+  sprite: {fileID: 21300000, guid: f459d47a6b6db944f9e00516effc4dd3, type: 3}
+  sptVFX: {fileID: 21300000, guid: 7347392a99ae4d44b912c68fde4ed8e4, type: 3}

@@ -10,26 +10,26 @@ public class HomeUI : MonoBehaviour
     [SerializeField] private Button[] buttonMaps;
     [SerializeField] private List<CarrotMap> carrotMaps;
     [SerializeField] private TextMeshProUGUI[] txtScoreMap;
+    [SerializeField] private TextMeshProUGUI[] txtLevel;
     [SerializeField] private Sprite imgMusicOn, imgMusicOff;
     [SerializeField] private Image imgMusic;
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private LoadingScreen loadingScreen;
     [SerializeField] private GameObject ExitGamePanel;
+    [SerializeField] private LevelPanelUI levelPanel;
 
-    public float value;
-    private int stateMusic;//0:off  1:on
-    private List<Map> maps;
+    private List<MapData> maps;
     private DataManager instanceDM;
+    private AudioManager instanceAM;
     // Start is called before the first frame update
     void Start()
     {
+        
         instanceDM = DataManager.instance;
+        instanceAM = AudioManager.instance;
         //call all map
-        maps = instanceDM.GetAllMap();
-        //call volume
-        stateMusic = instanceDM.GetMusic();
+        maps = instanceDM.GetDataAllMaps(5);
         HandleButtonMap();
-        HandleAudio();
+        instanceAM.GetMusic();
+        SetImageMusic(instanceAM.StatusMusic == 1 ? true : false);
     }
 
     // Update is called once per frame
@@ -38,35 +38,47 @@ public class HomeUI : MonoBehaviour
     }
     private void HandleButtonMap()
     {
-        if(maps.Count > buttonMaps.Length)
+        if (maps.Count > buttonMaps.Length)
         {
             Debug.LogError("Bug logic.Fix please");
             return;
         }
+        //Take high score
+       
         for (int i = 0; i < buttonMaps.Length; i++)
         {
-            Debug.Log("Map " + (i + 1) + ":       Score  " + maps[i].score + "        Star   " + maps[i].star + "");
-            HandleScoreMap(i, maps[i].score.ToString());
-            HandleCarrotMap(i, maps[i].star - 1);
-            if (maps[i].open == 1)
+            //active button map
+            if(maps[i] != null)
             {
+                int[] high = maps[i].GetHighScore();
+                HandleLevelMap(i, high[0].ToString()); 
+                HandleScoreMap(i, high[1].ToString()); 
+                HandleCarrotMap(i, high[2] - 1);
                 buttonMaps[i].interactable = true;
             }
+            //deactive button map
             else
             {
+                HandleLevelMap(i, 0.ToString());
+                HandleScoreMap(i, 0.ToString());
+                HandleCarrotMap(i, -1);
                 buttonMaps[i].interactable = false;
             }
         }
     }
-    private void HandleScoreMap(int index,string txtScore)
+    private void HandleScoreMap(int index, string txtScore)
     {
-        txtScoreMap[index].text = "Score : " + txtScore;
+        txtScoreMap[index].text = "High Score : " + txtScore;
     }
-    private void HandleCarrotMap(int index,int indexCarrot)
+    private void HandleLevelMap(int index, string txtLv)
+    {
+        txtLevel[index].text = "Level : " + txtLv;
+    }
+    private void HandleCarrotMap(int index, int indexCarrot)
     {
         for (int i = 0; i < carrotMaps[index].imgCarrots.Length; i++)
         {
-            if(i <= indexCarrot)
+            if (i <= indexCarrot)
             {
                 carrotMaps[index].imgCarrots[i].gameObject.SetActive(true);
             }
@@ -76,41 +88,31 @@ public class HomeUI : MonoBehaviour
             }
         }
     }
-    private void HandleAudio()
+    public void BtnAudio()
     {
-        if(stateMusic == 1)
+        instanceAM.SetMusicSetting(true);
+        SetImageMusic(instanceAM.StatusMusic == 1 ? true : false);
+    }
+    public void SetImageMusic(bool on)
+    {
+        if (on)
         {
-            //on
-            audioSource.Play();
             imgMusic.sprite = imgMusicOn;
         }
         else
         {
-            //off
-            audioSource.Pause();
             imgMusic.sprite = imgMusicOff;
         }
-        instanceDM.SetMusic(stateMusic);
-    }
-    public void BtnAudio()
-    {
-        if(stateMusic == 1)
-        {
-            stateMusic = 0;
-        }
-        else
-        {
-            stateMusic = 1;
-        }
-        HandleAudio();
     }
     public void BtnExitGame()
     {
+        instanceAM.ClickFx();
         //mở panel exit game
         ExitGamePanel.SetActive(true);
     }
     public void BtnYes_No(bool y_n)
     {
+        instanceAM.ClickFx();
         if (y_n)
         {
             //quit
@@ -123,9 +125,9 @@ public class HomeUI : MonoBehaviour
     }
     public void BtnMap(int level)
     {
-        //SceneManager.LoadScene("Lv" + level);
-        loadingScreen.gameObject.SetActive(true);
-        loadingScreen.LoadSceneGamePlay(level);
+        instanceAM.ClickFx();
+        levelPanel.gameObject.SetActive(true);
+        levelPanel.Init(maps[level - 1]);
     }
 
     [System.Serializable]

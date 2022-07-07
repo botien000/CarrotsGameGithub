@@ -19,6 +19,10 @@ public class GameSetting : MonoBehaviour
     {
         instanceAM = AudioManager.instance;
         instanceGM = GameManager.instance;
+        instanceAM.GetMusic();
+        instanceAM.GetSound();
+        SetImageMusic(instanceAM.StatusMusic == 1 ? true : false);
+        SetImageSound(instanceAM.StatusSound == 1 ? true : false);
     }
 
     // Update is called once per frame
@@ -28,27 +32,32 @@ public class GameSetting : MonoBehaviour
     }
     public void BtnHome()
     {
+        instanceAM.ClickFx();
         //SceneManager.LoadScene("Home");
         loadingScreen.gameObject.SetActive(true);
         loadingScreen.LoadSceneHome();
     }
     public void BtnRestart()
     {
+        instanceAM.ClickFx();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     public void BtnExit()
     {
+        instanceAM.ClickFx();
         instanceGM.FromSettingToPlay();
     }
     public void BtnSound()
     {
-        instanceAM.ClickFx();
         instanceAM.SetSoundSetting(true);
+        instanceAM.ClickFx();
+        SetImageSound(instanceAM.StatusSound == 1 ? true : false);
     }
     public void BtnMusic()
     {
-        instanceAM.ClickFx();
         instanceAM.SetMusicSetting(true);
+        instanceAM.ClickFx();
+        SetImageMusic(instanceAM.StatusMusic == 1 ? true : false);
     }
     public void SetImageSound(bool on)
     {

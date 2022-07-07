@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSourceMusic;
@@ -12,10 +12,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip getRightAnswer;
     [SerializeField] private AudioClip getWrongAnswer;
     [SerializeField] private AudioClip getItem;
+    [SerializeField] private AudioClip useItem;
     [SerializeField] private AudioClip gameOver;
     [SerializeField] private AudioClip jump;
     [SerializeField] private AudioClip breakShield;
-    [SerializeField] private GameSetting gameSettingUI;
 
     private DataManager instanceDM;
     private int statusSound;
@@ -35,17 +35,28 @@ public class AudioManager : MonoBehaviour
     /// Singleton 
     /// </summary>
     public static AudioManager instance;
+
+    public int StatusSound { get => statusSound; set => statusSound = value; }
+    public int StatusMusic { get => statusMusic; set => statusMusic = value; }
+
     private void Awake()
     {
         if (instance == null)
             instance = this;
+
+        if(FindObjectsOfType<AudioManager>().Length > 1)
+        {
+            Destroy(gameObject);
+            //return;
+        }
+        DontDestroyOnLoad(gameObject);
     }
     // Start is called before the first frame update
     void Start()
     {
         instanceDM = DataManager.instance;
-        statusSound = instanceDM.GetSound();
-        statusMusic = instanceDM.GetMusic();
+        GetSound();
+        GetMusic();
         SetSoundSetting(false);
         SetMusicSetting(false);
     }
@@ -55,6 +66,14 @@ public class AudioManager : MonoBehaviour
     {
 
     }
+    public void GetMusic()
+    {
+        statusMusic = instanceDM.GetMusic();
+    }
+    public void GetSound()
+    {
+        statusSound = instanceDM.GetSound();
+    }
     public void SetSoundSetting(bool isPressed)
     {
         //khi nhấn nút
@@ -63,12 +82,12 @@ public class AudioManager : MonoBehaviour
             if (statusSound == 1)
             {
                 statusSound = 0;
-                gameSettingUI.SetImageSound(false);
+                //gameSettingUI.SetImageSound(false);
             }
             else
             {
                 statusSound = 1;
-                gameSettingUI.SetImageSound(true);
+                //gameSettingUI.SetImageSound(true);
             }
         }
         else
@@ -76,14 +95,14 @@ public class AudioManager : MonoBehaviour
             //khi không nhấn nút
             if (statusSound == 1)
             {
-                gameSettingUI.SetImageSound(true);
+                //gameSettingUI.SetImageSound(true);
             }
             else
             {
-                gameSettingUI.SetImageSound(false);
+                //gameSettingUI.SetImageSound(false);
             }
         }
-        SetMute(statusSound == 1 ? false : true,1);
+        SetMuteorPause(statusSound == 1 ? false : true,1);
         //save db
         instanceDM.SetSound(statusSound);
     }
@@ -95,12 +114,12 @@ public class AudioManager : MonoBehaviour
             if (statusMusic == 1)
             {
                 statusMusic = 0;
-                gameSettingUI.SetImageMusic(false);
+                //gameSettingUI.SetImageMusic(false);
             }
             else
             {
                 statusMusic = 1;
-                gameSettingUI.SetImageMusic(true);
+                //gameSettingUI.SetImageMusic(true);
             }
         }
         else
@@ -108,28 +127,36 @@ public class AudioManager : MonoBehaviour
             //khi không nhấn nút
             if (statusMusic == 1)
             {
-                gameSettingUI.SetImageMusic(true);
+                //gameSettingUI.SetImageMusic(true);
             }
             else
             {
-                gameSettingUI.SetImageMusic(false);
+                //gameSettingUI.SetImageMusic(false);
             }   
         }
-        SetMute(statusMusic == 1 ? false : true, 0);
+        SetMuteorPause(statusMusic == 1 ? false : true, 0);
         //save db
-        instanceDM.SetSound(statusMusic);
+        instanceDM.SetMusic(statusMusic);
     }
-    private void SetMute(bool mute,int type)
+    private void SetMuteorPause(bool mute,int type)
     {
         if(type == 0)
         {
-            audioSourceMusic.mute = mute;
+            if (mute)
+            {
+                audioSourceMusic.Pause();
+            }
+            else
+            {
+                audioSourceMusic.Play();
+            }
             instanceDM.SetMusic(mute ? 0 : 1);
             return;
         }
         audioSourceSFX.mute = mute;
         instanceDM.SetSound(mute ? 0 : 1);
     }
+    #region SFx
     public void JumpFx()
     {
         audioSourceSFX.PlayOneShot(jump);
@@ -141,6 +168,10 @@ public class AudioManager : MonoBehaviour
     public void GetItemFx()
     {
         audioSourceSFX.PlayOneShot(getItem);
+    }
+    public void UseItemFx()
+    {
+        audioSourceSFX.PlayOneShot(useItem);
     }
     public void RightAnswerFx()
     {
@@ -158,4 +189,5 @@ public class AudioManager : MonoBehaviour
     {
         audioSourceSFX.PlayOneShot(breakShield);
     }
+    #endregion
 }

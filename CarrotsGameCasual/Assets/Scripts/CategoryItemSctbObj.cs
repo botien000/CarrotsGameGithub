@@ -12,6 +12,7 @@ public class CategoryItemSctbObj : ScriptableObject
     }
     public Category curCategory;
     public Sprite sprite;
+    public Sprite sptVFX;
     
     
 }

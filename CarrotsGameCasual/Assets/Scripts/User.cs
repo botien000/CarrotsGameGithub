@@ -16,7 +16,6 @@ public class User : MonoBehaviour
     private Animator animator;
     private GameManager instanceGM;
     private AudioManager instanceAM;
-    private Rigidbody2D rgbody;
     private Icon icon;
     private int curIndexPos;
     private int curHeart;
@@ -25,7 +24,6 @@ public class User : MonoBehaviour
     private float from, to;
     private void Awake()
     {
-        rgbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
     // Start is called before the first frame update
@@ -143,11 +141,11 @@ public class User : MonoBehaviour
         else if (collision.gameObject.tag == "Answer")
         {
             Answer answer = collision.GetComponent<Answer>();
+            //nếu bằng true thì mới cho phép tương tác xử lý
             if (answer.Interact)
             {
-                //nếu bằng true thì mới cho phép tương tác xử lý
-                instanceGM.RemoveAnswers(answer);
                 Result(answer.GetAnswer());
+                instanceGM.RemoveAnswers(answer,curHeart);
             }
         }
     }

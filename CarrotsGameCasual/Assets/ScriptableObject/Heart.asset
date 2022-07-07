@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curCategory: 5
   sprite: {fileID: 21300000, guid: f8236c5ab4280ec4fab8d4a4cb7d8062, type: 3}
+  sptVFX: {fileID: 21300000, guid: 7521a32b810f9c0478b77ea469178042, type: 3}

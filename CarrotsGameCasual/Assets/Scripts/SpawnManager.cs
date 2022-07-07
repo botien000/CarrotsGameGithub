@@ -72,6 +72,7 @@ public class SpawnManager : MonoBehaviour
     public ObjectPool itemPool;
     public ObjectPool answersPool;
     public ObjectPool scoreFlyPool;
+    public ObjectPool vfxPool;
     /// <summary>
     /// Singleton 
     /// </summary>

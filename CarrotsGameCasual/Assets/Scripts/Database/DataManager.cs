@@ -1,26 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 public class DataManager : MonoBehaviour
 {
-
-    private readonly int totalMap = 5;
+    private static string path;
     /// <summary>
-    /// Singleton 
+    /// Singleton
     /// </summary>
     public static DataManager instance;
     private void Awake()
     {
         if (instance == null)
             instance = this;
+
+        int first = PlayerPrefs.GetInt("FirstTimeToUse",0);
+        if(first == 0)
+        {
+            PlayerPrefs.SetInt("FirstTimeToUse", 1);
+            SaveDataMap(1, new MapData(1));
+        }
     }
-    private Map GetMap(int level)
+
+    public MapData GetDataMap(int typeMap)
     {
-        Map map = new Map();
-        map.open = PlayerPrefs.GetInt("OpenMap" + level, 0);
-        map.star = PlayerPrefs.GetInt("StarOfMap" + level, 0);
-        map.score = PlayerPrefs.GetInt("ScoreOfMap" + level, 0);
+        path = Application.persistentDataPath + "dataGame" + typeMap + ".json";
+        StreamReader streamReader = new StreamReader(path);
+        MapData map = JsonUtility.FromJson<MapData>(streamReader.ReadToEnd());
+        streamReader.Close();
         return map;
     }
     ///<sumary>
@@ -29,50 +38,34 @@ public class DataManager : MonoBehaviour
     ///<param name="level">Level</param>
     ///<param name="star">Star</param>
     ///<param name="score">Score</param>
-    public void SaveData(int level, int star, int score)
+    public void SaveDataMap(int typeMap,MapData map)
     {
-        Map map = GetMap(level);
-        if(map.star < star)
-        {
-            PlayerPrefs.SetInt("StarOfMap" + level, star);
-        }
-        if(map.score < score)
-        {
-            PlayerPrefs.SetInt("ScoreOfMap" + level, score);
-        }
-        if (star > 0 && level <= 5)
-        {
-            //open next map
-            PlayerPrefs.SetInt("OpenMap" + (level + 1), 1);
-        }
-        PlayerPrefs.Save();
+        path = Application.persistentDataPath + "dataGame" + typeMap + ".json";
+        StreamWriter streamReader = new StreamWriter(path);
+        streamReader.WriteLine(JsonUtility.ToJson(map));
+        streamReader.Close();
     }
 
     /// <summary>
     /// Get toàn bộ dữ liệu của 5 map
     /// </summary>
     /// <returns>List Map</returns>
-    public List<Map> GetAllMap()
+    public List<MapData> GetDataAllMaps(int numberOfMap)
     {
-        List<Map> maps = new List<Map>();
-        Map map;
-        for (int i = 0; i < totalMap; i++)
+        List<MapData> maps = new List<MapData>();
+        for (int i = 0; i < numberOfMap; i++)
         {
-            map = new Map();
-            //auto mở map 1
-            if (i == 0)
+            path = Application.persistentDataPath + "dataGame" + (i + 1) + ".json";
+            if (!File.Exists(path))
             {
-                map.open = PlayerPrefs.GetInt("OpenMap" + (i + 1), 1);
+                StreamWriter streamWriter = new StreamWriter(path);
+                streamWriter.Close();
             }
-            else
-            {
-                map.open = PlayerPrefs.GetInt("OpenMap" + (i + 1), 0);
-            }
-            map.star = PlayerPrefs.GetInt("StarOfMap" + (i + 1), 0);
-            map.score = PlayerPrefs.GetInt("ScoreOfMap" + (i + 1), 0);
-            maps.Add(map);
+                StreamReader streamReader = new StreamReader(path);
+                MapData map = JsonUtility.FromJson<MapData>(streamReader.ReadToEnd());
+                streamReader.Close();
+                maps.Add(map);
         }
-        PlayerPrefs.Save();
         return maps;
     }
     /// <summary>
@@ -109,10 +102,4 @@ public class DataManager : MonoBehaviour
     {
         return PlayerPrefs.GetInt("Music", 1);
     }
-}
-public class Map
-{
-    public int open;
-    public int star;
-    public int score;
 }
