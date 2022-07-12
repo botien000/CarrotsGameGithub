@@ -943,7 +943,7 @@ MonoBehaviour:
   - {fileID: 29389456}
   - {fileID: 1218795465}
   - {fileID: 683073862}
-  levelScptObj: {fileID: 11400000, guid: 39317a0c4dbb4a14283b49e0d47c8326, type: 2}
+  levelScptObj: {fileID: 11400000, guid: 57ba76adb300d5848a2362a2ee61cb48, type: 2}
   speedInGame: 1
   increaseSlowly: 0.0001
   scoreAchieve: 5

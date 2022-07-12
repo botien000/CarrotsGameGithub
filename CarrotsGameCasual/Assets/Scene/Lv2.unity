@@ -978,7 +978,7 @@ MonoBehaviour:
     activeObj: []
     inactiveObj: []
   vfxPool:
-    prefab: {fileID: 0}
+    prefab: {fileID: 5716176113451683616, guid: 030c2d846f6cd6a45b2e1b5873e63ee8, type: 3}
     parent: {fileID: 0}
     activeObj: []
     inactiveObj: []
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   - {fileID: 1012214065}
   - {fileID: 1414798484}
   - {fileID: 81074474}
-  levelScptObj: {fileID: 11400000, guid: 9e777b6a0648c6e4897b497f9bfbe1ba, type: 2}
+  levelScptObj: {fileID: 11400000, guid: 7f32bfc47d5f76f449915a79f343f8fb, type: 2}
   speedInGame: 1
   increaseSlowly: 0.0001
   scoreAchieve: 5
@@ -4388,7 +4388,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 145.6
+  m_fontSize: 181.5
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1

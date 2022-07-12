@@ -26,9 +26,18 @@ public class LevelPanelUI : MonoBehaviour
         anchor = rectScrollbar.anchorMax;
         HandleLevel((int)(anchor.x * 10f));
     }
-    public void Init(MapData mapData)
+    public void Init(MapData mapData,int levelHighScore)
     {
         map = mapData;
+        //levelhigh = 0 là trường hợp mới mở khoá map chưa có điểm từ lv nào
+        if (levelHighScore == 0)
+        {
+            rectScrollbar.anchorMax = new Vector2(1 / 10f, rectScrollbar.anchorMax.y);
+            rectScrollbar.anchorMin = new Vector2(1 / 10f - 0.1f, rectScrollbar.anchorMin.y);
+            return;
+        }
+        rectScrollbar.anchorMax = new Vector2(levelHighScore / 10f, rectScrollbar.anchorMax.y);
+        rectScrollbar.anchorMin = new Vector2(levelHighScore / 10f - 0.1f, rectScrollbar.anchorMin.y);
     }
     private void HandleLevel(int lv)
     {

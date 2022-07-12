@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a738d91a56fb140b17a0b33a98893c, type: 3}
+  m_Name: PlusLv1 1
+  m_EditorClassIdentifier: 
+  turns:
+  - turnItem: 08000000
+    turn: 1
+    speedUp: 0.3
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 1
+  - turnItem: 
+    turn: 3
+    speedUp: 1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 1
+  - turnItem: 
+    turn: 5
+    speedUp: -0.8
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 1
+  - turnItem: 
+    turn: 7
+    speedUp: 1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 1
+  - turnItem: 
+    turn: 9
+    speedUp: -1.2
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 2
+  - turnItem: 
+    turn: 11
+    speedUp: 1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 2
+  - turnItem: 
+    turn: 13
+    speedUp: -0.8
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 2
+  - turnItem: 
+    turn: 15
+    speedUp: 1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 2
+  - turnItem: 
+    turn: 17
+    speedUp: -1.2
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3
+  - turnItem: 
+    turn: 19
+    speedUp: 0.1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3
+  - turnItem: 
+    turn: 21
+    speedUp: 0.1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3
+  - turnItem: 
+    turn: 23
+    speedUp: 0.1
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3
+  - turnItem: 
+    turn: 25
+    speedUp: 0.3
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3
+  - turnItem: 
+    turn: 27
+    speedUp: 0.5
+    operationsEnumSptObj: 01000000
+    numberOfOpeSptObj: 3

@@ -2118,7 +2118,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8646774, y: 0.526}
   m_AnchorMax: {x: 0.9598925, y: 0.8085648}
-  m_AnchoredPosition: {x: -2.399994, y: 0.87000275}
+  m_AnchoredPosition: {x: -2.3999634, y: 0.87000275}
   m_SizeDelta: {x: 3.8899994, y: 0.94000006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &401169580
@@ -3533,7 +3533,7 @@ MonoBehaviour:
   - {fileID: 1636514091}
   - {fileID: 200502778}
   - {fileID: 1994791486}
-  levelScptObj: {fileID: 11400000, guid: 3260f69db4b6ff641ad7ad241be819f0, type: 2}
+  levelScptObj: {fileID: 11400000, guid: e117d0a14e2c0f141a61839d6f65dfde, type: 2}
   speedInGame: 1
   increaseSlowly: 0.0001
   scoreAchieve: 5
@@ -4562,7 +4562,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 138.1
+  m_fontSize: 159.45
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7129,7 +7129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8284507}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2, y: 22.49945}
+  m_AnchoredPosition: {x: 2, y: 22.499512}
   m_SizeDelta: {x: 40.5, y: 41.070007}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1927331918

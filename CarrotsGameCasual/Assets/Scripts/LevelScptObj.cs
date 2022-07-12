@@ -16,10 +16,7 @@ public class LevelScptObj : ScriptableObject
     [System.Serializable]
     public class TurnLevel
     {
-        [Range(1, 10)]
-        public int turnItemRangeFrom;
-        [Range(1, 10)]
-        public int turnItemRangeTo;
+        public int[] turnItem;
         public int turn;
         public float speedUp;
         public Operation[] operationsEnumSptObj;

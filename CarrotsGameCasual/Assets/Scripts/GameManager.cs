@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
     private Answer[] answers;
     private int curTurnInGame;
     private int curIndexLvScptObj;
-    private int turnItem;
     private int curTurnItem;
 
     private int firstScoreAchieve;
@@ -73,7 +72,6 @@ public class GameManager : MonoBehaviour
         answers = new Answer[posSpawnAnswer_Item.Length];
         curTurnInGame = 0;
         curIndexLvScptObj = 0;
-        turnItem = 0;
         curScore = 0;
         curTimeCounter = 0;
         indexCounterCarrot = 0;
@@ -89,7 +87,6 @@ public class GameManager : MonoBehaviour
         instanceDM = DataManager.instance;
         curSpeed = speedInGame;
         firstScoreAchieve = scoreAchieve;
-        RandomTurnItem();
     }
 
     // Update is called once per frame
@@ -156,14 +153,17 @@ public class GameManager : MonoBehaviour
         {
             curTurnInGame++;
             //Initial Item
-            if (curTurnInGame == turnItem)
+            //loop kiểm tra turn hiện tại có item không,không có thì thoát loop
+            for (int i = 0; i < levelScptObj.turns[curIndexLvScptObj].turnItem.Length; i++)
             {
-                curTurnItem = turnItem;
-                //spawn item
-                Item item = instanceSM.itemPool.SpawnObjInPool(posSpawnAnswer_Item[RandomNumber(0, posSpawnAnswer_Item.Length - 1)]).GetComponent<Item>();
-                item.Init(categoryItem[RandomNumber(0, categoryItem.Length - 1)]);
-                RandomTurnItem();
-                return;
+                if (curTurnInGame == levelScptObj.turns[curIndexLvScptObj].turnItem[i])
+                {
+                    curTurnItem = curTurnInGame;
+                    //spawn item
+                    Item item = instanceSM.itemPool.SpawnObjInPool(posSpawnAnswer_Item[RandomNumber(0, posSpawnAnswer_Item.Length - 1)]).GetComponent<Item>();
+                    item.Init(categoryItem[RandomNumber(0, categoryItem.Length - 1)]);
+                    return;
+                }
             }
             //Initial Question
             gamePlayUI.ClearText();
@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour
                 {
                     do
                     {
-                        wrongNumber = RandomNumber(lowestLimit, highestLimit);
+                        wrongNumber = RandomWrongAnswer(rightAnswer,highestLimit);
                     } while (wrongNumber == rightAnswer || wrongNumbers.Contains(wrongNumber));
                     wrongNumbers.Add(wrongNumber);
                     //spawn answer wrong
@@ -214,7 +214,29 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
     }
-
+    private int RandomWrongAnswer(int rightAnswer,int high)
+    {
+        int wrongAns;
+        int i = 900;
+        while(i > 0)
+        {
+            if(rightAnswer > i)
+            {
+                wrongAns = RandomNumber(i, i + 99);
+                return wrongAns;
+            }
+            i -= 100;
+        }
+        if(rightAnswer >= 10)
+        {
+            wrongAns = RandomNumber(10, 99);
+        }
+        else
+        {
+            wrongAns = RandomNumber(1, 9);
+        }
+        return wrongAns;
+    }
 
     /// <summary>
     /// Khi player tương tác với câu trả lời thì xử lý huỷ bỏ
@@ -242,10 +264,6 @@ public class GameManager : MonoBehaviour
         if (heartPlayer == 0)
             return;
         NextTurn();
-    }
-    private void RandomTurnItem()
-    {
-        turnItem += RandomNumber(levelScptObj.turns[curIndexLvScptObj].turnItemRangeFrom, levelScptObj.turns[curIndexLvScptObj].turnItemRangeTo);
     }
     private int RandomNumber(int first, int second)
     {
@@ -316,40 +334,51 @@ public class GameManager : MonoBehaviour
         ////////////tiep tuc
         //vòng lặp operation tìm tham số từng index,sau đó xét vị trí index đó trùng với indexgroup => nếu false : add vào longparams và shortparams
         //  true: xử lý group lấy các giá trị tham số bên trong add vào longparams,sau đó các giá trị sẽ được tính tổng để lấy giá trị mới rồi add vào shortparams
-        int numberOne = 0, numberTwo = 0;
-        for (int i = 0; i < shortOperation.Count + 1; i++)
+        //chỉ có nhân chia trong phép toán
+        if (shortOperation.Count == 0)
         {
-            if (i == 0)
+            CheckInGroup(0, RandomNumber(lowestLimit, highestLimit));
+            rightAnswer = shortParams[0];
+        }
+        else
+        {
+            int numberOne = 0, numberTwo = 0;
+            for (int i = 0; i < shortOperation.Count + 1; i++)
             {
-                switch (shortOperation[0])
+                if (i == 0)
                 {
-                    case 1:
-                        numberOne = RandomNumber(lowestLimit, highestLimit - 1);
-                        break;
-                    case 2:
-                        numberOne = RandomNumber(lowestLimit + 1, highestLimit);
-                        break;
-                    default:
-                        numberOne = RandomNumber(lowestLimit, highestLimit);
-                        break;
+                    switch (shortOperation[0])
+                    {
+                        case 1:
+                            numberOne = RandomNumber(lowestLimit, highestLimit - 1);
+                            break;
+                        case 2:
+                            numberOne = RandomNumber(lowestLimit + 1, highestLimit);
+                            break;
+                        default:
+                            numberOne = RandomNumber(lowestLimit + 1, highestLimit);
+                            break;
+                    }
+                    if (!CheckInGroup(i, numberOne))
+                    {
+                        shortParams.Add(numberOne);
+                        longParams.Add(numberOne);
+                    }
+                    numberOne = shortParams[i];
                 }
-                if (!CheckInGroup(i, numberOne))
+                else
                 {
-                    shortParams.Add(numberOne);
-                    longParams.Add(numberOne);
+                    numberTwo = FindSecondParameter(numberOne, shortOperation[i - 1], lowestLimit, highestLimit);
+                    if (!CheckInGroup(i, numberTwo))
+                    {
+                        shortParams.Add(numberTwo);
+                        longParams.Add(numberTwo);
+                    }
+                    numberOne = Calculate(numberOne, shortParams[i], shortOperation[i - 1]);
                 }
-                numberOne = shortParams[i];
             }
-            else
-            {
-                numberTwo = FindSecondParameter(numberOne, shortOperation[i - 1], lowestLimit, highestLimit);
-                if (!CheckInGroup(i, numberTwo))
-                {
-                    shortParams.Add(numberTwo);
-                    longParams.Add(numberTwo);
-                }
-                numberOne = Calculate(numberOne, shortParams[i], shortOperation[i - 1]);
-            }
+            //tính tổng tìm right answer
+            rightAnswer = numberOne;
         }
         for (int i = 0; i < longParams.Count; i++)
         {
@@ -362,8 +391,7 @@ public class GameManager : MonoBehaviour
                 ShowQuestionTextGamePlay(longParams[i], longOperation[i]);
             }
         }
-        //tính tổng tìm right answer
-        rightAnswer = numberOne;
+
     }
     private void ResetValueInQuestion()
     {
@@ -403,8 +431,8 @@ public class GameManager : MonoBehaviour
                 {
                     // *
                     case 3:
-                        //Phép nhân random tự do số thứ nhất,số thứ hai random kiểm tra điều kiện 2 số nhân nhau phải nhỏ hơn highestLimit
-                        firstParameter = RandomNumber(lowestLimit, highestLimit);
+                        //Phép nhân random tự do số thứ nhất + 1,số thứ hai random kiểm tra điều kiện 2 số nhân nhau phải nhỏ hơn highestLimit
+                        firstParameter = RandomNumber(lowestLimit + 1, highestLimit);
                         listParameter.Add(firstParameter);
                         secondParameter = FindSecondParameter(firstParameter, listOperation[i], lowestLimit, highestLimit);
                         listParameter.Add(secondParameter);
@@ -473,18 +501,42 @@ public class GameManager : MonoBehaviour
         switch (operation)
         {
             case 1:
+                //trường hợp số đầu bằng số lớn nhất thì mặc định số thứ hai là 0
+                if(first == highestLimit)
+                {
+                    second = 0;
+                    break;
+                }
                 second = RandomNumber(lowestLimit, highestLimit - first);
                 break;
             case 2:
+                //trường hợp số đầu bằng số nhỏ nhất thì mặc định số thứ hai là 0
+                if (first == 0)
+                {
+                    second = 0;
+                    break;
+                }
                 second = RandomNumber(lowestLimit, first - lowestLimit);
                 break;
             case 3:
+                //trường hợp số đầu bằng số nhỏ nhất thì mặc định số thứ hai là 1
+                if (first == highestLimit)
+                {
+                    second = 1;
+                    break;
+                }
                 do
                 {
                     second = RandomNumber(lowestLimit, highestLimit);
                 } while (first * second > highestLimit);
                 break;
             case 4:
+                //trường hợp first = 0 thì ngẫu nhiên cơ bản bởi vì chia số nào cũng về 0
+                if(first == 0)
+                {
+                    second = RandomNumber(lowestLimit, highestLimit);
+                    break;
+                }
                 //check phải số nguyên tố?
                 for (int i = 0; i < first; i++)
                 {

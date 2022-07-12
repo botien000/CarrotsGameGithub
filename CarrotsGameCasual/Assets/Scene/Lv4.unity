@@ -371,7 +371,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 154.9
+  m_fontSize: 192.32
   m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   - {fileID: 29389456}
   - {fileID: 1218795465}
   - {fileID: 683073862}
-  levelScptObj: {fileID: 11400000, guid: bf6e01683d8e4ee47a84bf7552ba46b9, type: 2}
+  levelScptObj: {fileID: 11400000, guid: 8005bf4237f85cb468bbf5994082616f, type: 2}
   speedInGame: 1
   increaseSlowly: 0.0001
   scoreAchieve: 5
@@ -3065,7 +3065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.70000005}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2, y: 22.199677}
+  m_AnchoredPosition: {x: 2, y: 22.199707}
   m_SizeDelta: {x: 40.5, y: 47.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &947955192

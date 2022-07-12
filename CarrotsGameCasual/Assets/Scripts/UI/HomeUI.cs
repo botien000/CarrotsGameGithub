@@ -105,7 +105,7 @@ public class HomeUI : MonoBehaviour
         }
     }
     public void BtnExitGame()
-    {
+    {   
         instanceAM.ClickFx();
         //mở panel exit game
         ExitGamePanel.SetActive(true);
@@ -127,9 +127,8 @@ public class HomeUI : MonoBehaviour
     {
         instanceAM.ClickFx();
         levelPanel.gameObject.SetActive(true);
-        levelPanel.Init(maps[level - 1]);
+        levelPanel.Init(maps[level - 1],maps[level - 1].GetHighScore()[0]);
     }
-
     [System.Serializable]
     class CarrotMap
     {

@@ -1043,7 +1043,7 @@ MonoBehaviour:
   - {fileID: 29389456}
   - {fileID: 1218795465}
   - {fileID: 683073862}
-  levelScptObj: {fileID: 11400000, guid: e2e05d71843b94e40bd0c22b6ea8f0ea, type: 2}
+  levelScptObj: {fileID: 11400000, guid: 1b3c96a5dd5127d448732870e67886e0, type: 2}
   speedInGame: 1
   increaseSlowly: 0.0001
   scoreAchieve: 5
@@ -3305,7 +3305,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8286114}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2, y: 21.999329}
+  m_AnchoredPosition: {x: 2, y: 21.999268}
   m_SizeDelta: {x: 40.5, y: 42.070007}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &947955192
@@ -4549,7 +4549,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 134.99998, y: 93}
+  m_AnchoredPosition: {x: 135, y: 93}
   m_SizeDelta: {x: 170, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1399897609
@@ -6928,7 +6928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7026321241342477017, guid: 45388c603f7936b479e65d8f8d02c058, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -384.99994
+      value: -385
       objectReference: {fileID: 0}
     - target: {fileID: 7026321241342477017, guid: 45388c603f7936b479e65d8f8d02c058, type: 3}
       propertyPath: m_AnchoredPosition.y
