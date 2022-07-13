@@ -735,12 +735,15 @@ public class GameManager : MonoBehaviour
                 if (map.GetScore(level) < curScore)
                 {
                     map.SetScore(level, curScore);
+                }
+                if(map.GetCarrotStar(level) < indexCounterCarrot)
+                {
                     map.SetCarrotStar(level, indexCounterCarrot);
                 }
                 instanceDM.SaveDataMap(typeMap, map);
                 UnlockNextMap(map.GetCarrotStar(level));
                 break;
-            case StateGame.GameSetting:
+            case StateGame.GameSetting: 
                 isPause = true;
                 Time.timeScale = 1f;
                 gameSettingUI.gameObject.SetActive(true);
